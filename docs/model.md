@@ -31,12 +31,12 @@ CREATE TABLE `user` (
 | id | id | VARCHAR(64) | UUID |
 | name | 名称 | VARCHAR(16) | 使用git仓库中的项目名 |
 | description | 描述 | VARCHAR(64) |  |
-| package_name | 包名 | VARCHAR(16) | 完整包名，如：demo.jar |
-| deploy_sub_module | 发布子模块名称 | VARCHAR(16) | 发布的子模块文件夹名 |
-| project_source_path | 项目源码路径 | VARCHAR(32) |  |
-| project_deploy_path | 项目发布路径 | VARCHAR(32) |  |
 | git_url | 远程git仓库地址 | VARCHAR(64) |  |
 | branch | 分支名 | VARCHAR(16) |  |
+| project_source_path | 项目源码路径 | VARCHAR(32) |  |
+| project_deploy_path | 项目发布路径 | VARCHAR(32) |  |
+| package_name | 包名 | VARCHAR(16) | 完整包名，如：demo.jar |
+| deploy_sub_module | 发布子模块名称 | VARCHAR(16) | 发布的子模块文件夹名 |
 | deploy_way | 发布方法 | INT | 1: 直接运行; 2: 拷贝到容器 |
 | custom_start | 自定义启动命令 | VARCHAR(16) |  |
 | web_container_id | 容器id | VARCHAR(16) |  |
@@ -47,12 +47,12 @@ CREATE TABLE `project` (
   `id` VARCHAR(64) NOT NULL,
   `name` VARCHAR(16) NOT NULL COMMENT '名称',
   `description` VARCHAR(64) COMMENT '描述',
-  `package_name` VARCHAR(16) NOT NULL CPMMENT '包名 完整包名，如：demo.jar',
-  `deploy_sub_module` VARCHAR(16) CPMMENT '发布子模块名称 发布的子模块文件夹名',
-  `project_source_path` VARCHAR(32) NOT NULL CPMMENT '项目源码路径',
-  `project_deploy_path` VARCHAR(32) NOT NULL CPMMENT '项目发布路径',
   `git_url` VARCHAR(64) NOT NULL CPMMENT '远程git仓库地址',
   `branch` VARCHAR(16) CPMMENT '分支名',
+  `project_source_path` VARCHAR(32) NOT NULL CPMMENT '项目源码路径',
+  `project_deploy_path` VARCHAR(32) NOT NULL CPMMENT '项目发布路径',
+  `package_name` VARCHAR(16) NOT NULL CPMMENT '包名 完整包名，如：demo.jar',
+  `deploy_sub_module` VARCHAR(16) CPMMENT '发布子模块名称 发布的子模块文件夹名',
   `deploy_way` INT CPMMENT '发布方法 1: 直接运行; 2: 拷贝到容器',
   `custom_start` VARCHAR(16) CPMMENT '自定义启动命令',
   `web_container_id` VARCHAR(16) CPMMENT '容器id',
