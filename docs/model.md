@@ -2,7 +2,9 @@
 
 ## 数据结构
 
-### 用户表 user
+### ~~用户表 user~~
+因为打包发布这种事只能单用户操作，所以用户表貌似就没什么用了
+
 | 字段名 | 说明 | 类型 | 备注 |
 | --- | --- | --- | --- |
 | id | id | INT | 自增量，主键 |
@@ -68,3 +70,5 @@ CREATE TABLE `project` (
 | name | 名称 | VARCHAR(16) | 使用git仓库中的项目名 |
 | description | 描述 | VARCHAR(16) |  |
 | path | 路径 | VARCHAR(16) |  |
+| type | 类型 | INT | 1: tomcat; 2: jetty |
+| create_at | 创建时间 | DATETIME |  |
