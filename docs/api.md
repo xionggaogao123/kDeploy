@@ -76,7 +76,7 @@ ${操作结果}
 
 ## 项目模块
 
-### 分页查询项目列表 `/product/pageList`
+### 分页查询项目列表 `/project/pageList`
 ~~~js
 Request:
 {
@@ -92,7 +92,7 @@ ${查询多条数据} -> {
 }
 ~~~
 
-### 查询项目详情 `/product/{id}/get`
+### 查询项目详情 `/project/{id}/get`
 {id}为项目id
 ~~~js
 Response:
@@ -114,7 +114,7 @@ ${查询单条数据} -> {
 }
 ~~~
 
-### 新增项目 `/product/add`
+### 新增项目 `/project/add`
 ~~~js
 Response:
 {
@@ -135,7 +135,7 @@ Response:
 ${操作结果}
 ~~~
 
-### 更新项目 `/product/{id}/update`
+### 更新项目 `/project/{id}/update`
 {id}为项目id
 ~~~js
 Response:
@@ -157,7 +157,7 @@ Response:
 ${操作结果}
 ~~~
 
-### 删除项目 `/product/{id}/delete`
+### 删除项目 `/project/{id}/delete`
 {id}为项目id
 ~~~js
 Response:
