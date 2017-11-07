@@ -66,6 +66,9 @@ Request:
 
 Response:
 ${操作结果}
+
+Error:
+201: 用户名或密码不正确
 ~~~
 
 ### 登录 `/user/logout`
@@ -90,6 +93,9 @@ ${查询多条数据} -> {
   description: "", // 描述
   status: 0, // 状态。0 未部署, 1 启动中, 2 已停止
 }
+
+Error:
+103: 缺少分页参数
 ~~~
 
 ### 查询项目详情 `/project/{id}/get`

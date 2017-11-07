@@ -1,8 +1,11 @@
 package com.lk.kDeploy.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lk.kDeploy.entity.Project;
 import com.lk.kDeploy.mapper.ProjectMapper;
 
 /**
@@ -17,7 +20,13 @@ public class ProjectService {
 	@Autowired
 	private ProjectMapper projectMapper;
 	
-	public int count() {
-		return projectMapper.count();
+	public List<Project> pageList(String name, Integer from, Integer pageSize) {
+		return projectMapper.pageList(name, from, pageSize);
+	}
+
+	public int count(String name) {
+		Project java = new Project();
+		java.setName(name);
+		return projectMapper.selectCount(java);
 	}
 }

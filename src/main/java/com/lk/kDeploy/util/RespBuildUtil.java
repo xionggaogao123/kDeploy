@@ -39,11 +39,24 @@ public class RespBuildUtil {
 		return resp;
 	}
 	
-	public static ResponceDTO success(List<? extends Object> list, Integer page, Integer pageSize, Integer totalPage) {
+	/**
+	 * 返回多条数据和分页参数
+	 * @param list
+	 * @param page 页码从1开始
+	 * @param pageSize 每页数据数
+	 * @param total 数据总数
+	 * @return
+	 */
+	public static ResponceDTO success(List<? extends Object> list, Integer page, Integer pageSize, Integer total) {
 		ResponceDTO resp = success();
 		resp.setDataList(list);
 		resp.setPage(page);
 		resp.setPageSize(pageSize);
+		
+		Integer totalPage = 1;
+		if (total > 0) {
+			totalPage = (total - 1) / pageSize + 1;
+		}
 		resp.setTotalPage(totalPage);
 		
 		return resp;

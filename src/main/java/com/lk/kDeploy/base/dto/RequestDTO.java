@@ -51,6 +51,11 @@ public class RequestDTO {
 
 		return (T) obj;
 	}
+	
+	@JSONField(serialize = false)
+	public Integer getSelectFrom() {
+		return pageSize * (page - 1);
+	}
 
 	public Integer getPage() {
 		return page;

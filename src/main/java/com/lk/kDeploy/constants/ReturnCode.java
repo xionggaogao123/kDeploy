@@ -22,4 +22,16 @@ public interface ReturnCode {
      * 参数为空
      */
     int PARAMS_BLANK_ERROR = 102;
+    /**
+     * 缺少分页参数
+     */
+    int PAGE_PARAM_BLANK_ERROR = 103;
+    
+    /*
+     * 用户模块
+     */
+    /**
+     * 用户名或密码不正确
+     */
+    int USERNAME_OR_PASSWORD_ERROR = 201;
 }

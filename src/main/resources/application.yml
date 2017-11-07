@@ -30,3 +30,7 @@ server:
   session:
     timeout: 1800
   port: 8880
+  
+kdeploy: 
+  username: admin
+  password: 123123
