@@ -1,0 +1,32 @@
+spring: 
+  datasource: 
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/kdeploy?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: 7794306
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+  http: 
+    converters:
+      preferred-json-mapper: fastjson
+    encoding: 
+      charset: UTF-8
+      force-response: true
+      
+mybatis: 
+  configuration:
+    map-underscore-to-camel-case: true
+    
+mapper:
+    mappers: com.lk.kDeploy.base.BaseMapper
+    not-empty: false
+    identity: MYSQL
+    
+server:
+  context-path: /kdeploy/api
+  session:
+    timeout: 1800
+  port: 8880
