@@ -26,7 +26,7 @@ import com.lk.kDeploy.util.RespBuildUtil;
  * @since: 2017年11月7日
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
 	protected static final Logger LOG = LoggerFactory.getLogger(UserController.class);
 

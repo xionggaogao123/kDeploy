@@ -2,6 +2,7 @@ package com.lk.kDeploy.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +23,7 @@ import com.lk.kDeploy.util.RespBuildUtil;
  * @since: 2017年11月7日
  */
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/api/test")
 public class TestController {
 	private static final Logger LOG = LoggerFactory.getLogger(TestController.class);
 
@@ -36,5 +37,13 @@ public class TestController {
         project.setId("998");
         return RespBuildUtil.success(project);
     }
+	
+	@GetMapping
+	@AnonymousAccess
+	public ResponceDTO test() {
+		Project project = new Project();
+		project.setId("998");
+		return RespBuildUtil.success(project);
+	}
 	
 }

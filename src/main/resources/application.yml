@@ -26,7 +26,7 @@ mapper:
     identity: MYSQL
     
 server:
-  context-path: /kdeploy/api
+  context-path: /kdeploy
   session:
     timeout: 1800
   port: 8880
