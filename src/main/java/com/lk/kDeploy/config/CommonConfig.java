@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * @since: 2017年11月7日
  */
 @Component
-public class KdeployConfig {
+public class CommonConfig {
 
 	@Value("${kdeploy.username}")
 	private String username;

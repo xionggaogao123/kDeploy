@@ -1,11 +1,15 @@
 package com.lk.kDeploy.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lk.kDeploy.base.annotion.AnonymousAccess;
 import com.lk.kDeploy.base.dto.RequestDTO;
-import com.lk.kDeploy.base.dto.ResponceDTO;
-import com.lk.kDeploy.config.KdeployConfig;
+import com.lk.kDeploy.base.dto.ResponseDTO;
+import com.lk.kDeploy.config.CommonConfig;
 import com.lk.kDeploy.constants.Constants;
 import com.lk.kDeploy.constants.ReturnCode;
 import com.lk.kDeploy.util.RespBuildUtil;
@@ -31,11 +35,11 @@ public class UserController {
 	protected static final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
-	private KdeployConfig kdeployConfig;
+	private CommonConfig kdeployConfig;
 	
 	@PostMapping("/login")
 	@AnonymousAccess
-	public ResponceDTO login(@RequestBody RequestDTO reqDto, HttpServletRequest request) {
+	public ResponseDTO login(@RequestBody RequestDTO reqDto, HttpServletRequest request) {
 		String username = reqDto.getStringParam("username");
 		String password = reqDto.getStringParam("password");
 		
@@ -48,9 +52,21 @@ public class UserController {
 		return RespBuildUtil.success();
 	}
 	
+	@GetMapping("/session")
+	public ResponseDTO getSession(HttpServletRequest request) {
+		Object username = request.getSession().getAttribute(Constants.SESSION_LOGIN_USER);
+		if (null == username) {
+			return RespBuildUtil.error(ReturnCode.SESSION_TIMEOUT);
+		}
+		
+		Map<String, Object> resMap = new HashMap<>();
+		resMap.put("username", username);
+		return RespBuildUtil.success(resMap);
+	}
+	
 	@PostMapping("/logout")
 	@AnonymousAccess
-	public ResponceDTO logout(HttpServletRequest request) {
+	public ResponseDTO logout(HttpServletRequest request) {
 		request.getSession().invalidate();
 		return RespBuildUtil.success();
 	}

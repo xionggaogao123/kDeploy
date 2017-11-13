@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lk.kDeploy.base.dto.RequestDTO;
-import com.lk.kDeploy.base.dto.ResponceDTO;
+import com.lk.kDeploy.base.dto.ResponseDTO;
 import com.lk.kDeploy.base.vo.ProjectSimpleVO;
 import com.lk.kDeploy.constants.ReturnCode;
 import com.lk.kDeploy.entity.Project;
@@ -34,7 +34,7 @@ public class ProjectController {
 	private ProjectService projectService;
 	
 	@PostMapping("/pageList")
-	public ResponceDTO pageList(@RequestBody RequestDTO reqDto) {
+	public ResponseDTO pageList(@RequestBody RequestDTO reqDto) {
 		Integer page = reqDto.getPage();
 		Integer pageSize = reqDto.getPageSize();
 		if (null == page || null == pageSize) {

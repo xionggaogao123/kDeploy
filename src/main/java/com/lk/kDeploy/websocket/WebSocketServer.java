@@ -3,8 +3,11 @@ package com.lk.kDeploy.websocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.Configuration;
+import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
+import com.lk.kDeploy.base.dto.SocketMsgDTO;
 
 /**
  * WebSocket服务
@@ -45,13 +48,12 @@ public class WebSocketServer {
 		socketIOServer.stop();
 	}
 	
-	public void addEventListener() {
-//		socketIOServer.addEventListener("connectin", Map.class, new DataListener<Map<>() {
-//
-//			@Override
-//			public void onData(final SocketIOClient client, Map data, final AckRequest ackRequest) {
-//				log.info("connectin in");
-//			}
-//		});
+	/**
+	 * 增加WebSocket监听事件
+	 * @param eventName
+	 * @param eventAction
+	 */
+	public static void addEventListener(String eventName, EventAction eventAction) {
+		socketIOServer.addEventListener(eventName, SocketMsgDTO.class, (SocketIOClient client, SocketMsgDTO socketMsg, AckRequest ackRequest) -> eventAction.onData(client, socketMsg));
 	}
 }

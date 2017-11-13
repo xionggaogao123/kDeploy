@@ -24,7 +24,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.lk.kDeploy.base.annotion.AnonymousAccess;
 import com.lk.kDeploy.base.annotion.ValidateRequired;
 import com.lk.kDeploy.base.dto.RequestDTO;
-import com.lk.kDeploy.base.dto.ResponceDTO;
+import com.lk.kDeploy.base.dto.ResponseDTO;
 import com.lk.kDeploy.constants.Constants;
 import com.lk.kDeploy.constants.ReturnCode;
 import com.lk.kDeploy.exception.ServiceException;
@@ -82,11 +82,11 @@ public class AccessLogAspect {
 			if (null != reqDto) validateRequired(method, reqDto.getParams());
 			
 			Object result = pjp.proceed();
-			LOG.info("接口返回, uri: {}, responce: {}", uri, JsonUtils.toJson(result));
+			LOG.info("接口返回, uri: {}, response: {}", uri, JsonUtils.toJson(result));
 			
 			return result;
 		} catch (ServiceException e) {
-			ResponceDTO errorResp = RespBuildUtil.error(e.getErrorCode());
+			ResponseDTO errorResp = RespBuildUtil.error(e.getErrorCode());
 			LOG.info("接口返回, errorResp: {}", JsonUtils.toJson(errorResp));
 			return errorResp;
 		}

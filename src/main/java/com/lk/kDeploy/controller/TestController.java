@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lk.kDeploy.base.annotion.AnonymousAccess;
 import com.lk.kDeploy.base.annotion.ValidateRequired;
 import com.lk.kDeploy.base.dto.RequestDTO;
-import com.lk.kDeploy.base.dto.ResponceDTO;
+import com.lk.kDeploy.base.dto.ResponseDTO;
 import com.lk.kDeploy.entity.Project;
 import com.lk.kDeploy.util.JsonUtils;
 import com.lk.kDeploy.util.RespBuildUtil;
@@ -30,7 +30,7 @@ public class TestController {
 	@PostMapping
 	@AnonymousAccess
 	@ValidateRequired({"name", "type"})
-    public ResponceDTO checkUser(@RequestBody RequestDTO req) {
+    public ResponseDTO checkUser(@RequestBody RequestDTO req) {
         LOG.info("收到参数：{}", JsonUtils.toJson(req));
         
         Project project = new Project();
@@ -40,7 +40,7 @@ public class TestController {
 	
 	@GetMapping
 	@AnonymousAccess
-	public ResponceDTO test() {
+	public ResponseDTO test() {
 		Project project = new Project();
 		project.setId("998");
 		return RespBuildUtil.success(project);

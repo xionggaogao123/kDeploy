@@ -8,7 +8,7 @@ import java.util.List;
  * @author: lk
  * @since: 2017年10月1日
  */
-public class ResponceDTO {
+public class ResponseDTO {
 
 	private int returnCode;
 	private String returnMsg;

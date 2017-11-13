@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.lk.kDeploy.base.dto.ResponceDTO;
+import com.lk.kDeploy.base.dto.ResponseDTO;
 import com.lk.kDeploy.config.RespMessage;
 import com.lk.kDeploy.constants.ReturnCode;
 
@@ -25,15 +25,15 @@ public class RespBuildUtil {
     	RespBuildUtil.respMessage = respMessage;
     }
 	
-	public static ResponceDTO success(Object obj) {
-		ResponceDTO resp = success();
+	public static ResponseDTO success(Object obj) {
+		ResponseDTO resp = success();
 		resp.setData(obj);
 		
 		return resp;
 	}
 	
-	public static ResponceDTO success(List<? extends Object> list) {
-		ResponceDTO resp = success();
+	public static ResponseDTO success(List<? extends Object> list) {
+		ResponseDTO resp = success();
 		resp.setDataList(list);
 		
 		return resp;
@@ -47,8 +47,8 @@ public class RespBuildUtil {
 	 * @param total 数据总数
 	 * @return
 	 */
-	public static ResponceDTO success(List<? extends Object> list, Integer page, Integer pageSize, Integer total) {
-		ResponceDTO resp = success();
+	public static ResponseDTO success(List<? extends Object> list, Integer page, Integer pageSize, Integer total) {
+		ResponseDTO resp = success();
 		resp.setDataList(list);
 		resp.setPage(page);
 		resp.setPageSize(pageSize);
@@ -62,14 +62,14 @@ public class RespBuildUtil {
 		return resp;
 	}
 
-	public static ResponceDTO success() {
-		ResponceDTO resp = new ResponceDTO();
+	public static ResponseDTO success() {
+		ResponseDTO resp = new ResponseDTO();
 		resp .setReturnCode(ReturnCode.SUCCESS);
 		return resp;
 	}
 	
-	public static ResponceDTO error(int returnCode) {
-		ResponceDTO resp = new ResponceDTO();
+	public static ResponseDTO error(int returnCode) {
+		ResponseDTO resp = new ResponseDTO();
 		resp.setReturnCode(returnCode);
 		resp.setReturnMsg(respMessage.get(returnCode));
 		return resp;
