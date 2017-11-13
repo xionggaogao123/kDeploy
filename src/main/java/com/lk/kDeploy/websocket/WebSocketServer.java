@@ -77,7 +77,7 @@ public class WebSocketServer {
 				try {
 					Thread.sleep(1000 * 3);
 					
-					WebSocketServer.pushMsg("chat", client, socketMsg);
+					WebSocketServer.pushMsg("registCallback", client, socketMsg);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
