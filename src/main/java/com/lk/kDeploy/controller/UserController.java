@@ -35,7 +35,7 @@ public class UserController {
 	protected static final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
-	private CommonConfig kdeployConfig;
+	private CommonConfig commonConfig;
 	
 	@PostMapping("/login")
 	@AnonymousAccess
@@ -43,8 +43,8 @@ public class UserController {
 		String username = reqDto.getStringParam("username");
 		String password = reqDto.getStringParam("password");
 		
-		String realPassword = kdeployConfig.getPassword();
-		if (!kdeployConfig.getUsername().equals(username) || !DigestUtils.sha512Hex(realPassword).equals(password)) {
+		String realPassword = commonConfig.getPassword();
+		if (!commonConfig.getUsername().equals(username) || !DigestUtils.sha512Hex(realPassword).equals(password)) {
 			return RespBuildUtil.error(ReturnCode.USERNAME_OR_PASSWORD_ERROR);
 		}
 		

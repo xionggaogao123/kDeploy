@@ -34,3 +34,6 @@ server:
 kdeploy: 
   username: admin
   password: 123123
+  websocket: 
+    host: 0.0.0.0
+    port: 8881
