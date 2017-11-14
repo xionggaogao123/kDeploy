@@ -2,17 +2,18 @@
 
 ## 基础HTTP API
 
-* kDeploy系统的接口调用地址为："`域名`:`端口号`/kDeploy/api/`uri`"
+* kDeploy系统的HTTP接口调用地址为："`域名`:`端口号`/kDeploy/api/`uri`"
 * API默认使用`HTTP POST`发出请求。各个请求的参数格式在本文档中有定义。
 * JSON中的时间，一律是 `yyyy-MM-dd HH:mm:ss` 格式，东八区时间。
 * JSON中的密码，一律是 `SHA512 HEX`字符串格式。
 
 ### 请求数据格式
 ~~~js
+文档使用Request的数据来填充`${SOME DATA}`
 {
 	page: 1, // 第几页，从1开始计数。分页的接口必填
 	pageSize: 20 // 本次分页大小。分页的接口必填
-	params: {} // 请求参数
+	params: ${SOME DATA} // 请求参数
 }
 ~~~
 
@@ -81,7 +82,9 @@ Request:
 }
 
 Response:
-${操作结果}
+${查询单条数据} -> {
+	token: "token"
+}
 
 Error:
 201: 用户名或密码不正确
@@ -99,7 +102,7 @@ Error:
 100: session过期，请重新登录
 ~~~
 
-#### 登录 `/user/logout`
+#### 登出 `/user/logout`
 ~~~js
 Response:
 ${操作结果}
@@ -200,9 +203,34 @@ ${操作结果}
 
 ## Web Socket API
 
-* kDeploy系统的接口调用地址为："`域名`:`端口号`/kDeploy/api/`uri`"
-* API默认使用`HTTP POST`发出请求。各个请求的参数格式在本文档中有定义。
-* JSON中的时间，一律是 `yyyy-MM-dd HH:mm:ss` 格式，东八区时间。
-* JSON中的密码，一律是 `SHA512 HEX`字符串格式。
+* kDeploy系统的WebSocket连接地址为："`域名`:`WebSocket端口号`"
 
-###
+### 发送/接收消息数据格式
+文档使用Data的数据来填充`${SOME DATA}`
+~~~js
+{
+	title: "", // 标题。可选项
+	params: ${SOME DATA} // 消息参数
+}
+~~~
+
+### 发送消息接口
+
+#### 注册websocket `regist`
+~~~js
+Data:
+{
+	token: "token" // websocket端口号
+}
+~~~
+
+### 监听消息
+
+#### 接收命令执行日志 `commandEcho`
+~~~js
+Data:
+{
+	id: "uuid", // 执行命令的项目id
+	log: ""  // 命令执行日志
+}
+~~~
