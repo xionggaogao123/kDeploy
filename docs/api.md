@@ -1,6 +1,6 @@
 # kDeploy接口文档
 
-## 基础API
+## 基础HTTP API
 
 * kDeploy系统的接口调用地址为："`域名`:`端口号`/kDeploy/api/`uri`"
 * API默认使用`HTTP POST`发出请求。各个请求的参数格式在本文档中有定义。
@@ -60,9 +60,19 @@ ${查询多条数据}
 * 102: 参数为空
 * 103: 缺少分页参数
 
-## 用户模块
+### 基础模块
 
-### 登录 `/user/login`
+#### 获取系统配置 `/common/getConfig`
+~~~js
+Response:
+{
+	websocketPort: 8881 // websocket端口号
+}
+~~~
+
+### 用户模块
+
+#### 登录 `/user/login`
 ~~~js
 Request:
 {
@@ -77,7 +87,7 @@ Error:
 201: 用户名或密码不正确
 ~~~
 
-### 查询登录信息 `/user/session`
+#### 查询登录信息 `/user/session`
 请求方式：GET
 ~~~js
 Response:
@@ -89,15 +99,15 @@ Error:
 100: session过期，请重新登录
 ~~~
 
-### 登录 `/user/logout`
+#### 登录 `/user/logout`
 ~~~js
 Response:
 ${操作结果}
 ~~~
 
-## 项目模块
+### 项目模块
 
-### 分页查询项目列表 `/project/pageList`
+#### 分页查询项目列表 `/project/pageList`
 ~~~js
 Request:
 {
@@ -116,7 +126,7 @@ Error:
 103: 缺少分页参数
 ~~~
 
-### 查询项目详情 `/project/{id}/get`
+#### 查询项目详情 `/project/{id}/get`
 {id}为项目id
 ~~~js
 Response:
@@ -138,7 +148,7 @@ ${查询单条数据} -> {
 }
 ~~~
 
-### 新增项目 `/project/add`
+#### 新增项目 `/project/add`
 ~~~js
 Response:
 {
@@ -159,7 +169,7 @@ Response:
 ${操作结果}
 ~~~
 
-### 更新项目 `/project/{id}/update`
+#### 更新项目 `/project/{id}/update`
 {id}为项目id
 ~~~js
 Response:
@@ -181,9 +191,18 @@ Response:
 ${操作结果}
 ~~~
 
-### 删除项目 `/project/{id}/delete`
+#### 删除项目 `/project/{id}/delete`
 {id}为项目id
 ~~~js
 Response:
 ${操作结果}
 ~~~
+
+## Web Socket API
+
+* kDeploy系统的接口调用地址为："`域名`:`端口号`/kDeploy/api/`uri`"
+* API默认使用`HTTP POST`发出请求。各个请求的参数格式在本文档中有定义。
+* JSON中的时间，一律是 `yyyy-MM-dd HH:mm:ss` 格式，东八区时间。
+* JSON中的密码，一律是 `SHA512 HEX`字符串格式。
+
+###

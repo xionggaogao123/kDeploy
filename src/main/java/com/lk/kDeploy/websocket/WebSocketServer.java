@@ -40,7 +40,7 @@ public class WebSocketServer {
 		socketIOServer = new SocketIOServer(config);
 		socketIOServer.start();
 		
-		LOGGER.info("WebSocket服务启动成功。监听地址: {}:{}", listenHostName, port);
+		LOGGER.info("WebSocket服务启动成功。监听地址 {}:{}", listenHostName, port);
 		
 		initEventListener();
 		return myServer;
@@ -57,31 +57,35 @@ public class WebSocketServer {
 	 * @param eventAction
 	 */
 	public static void addEventListener(String eventName, EventAction eventAction) {
-		socketIOServer.addEventListener(eventName, SocketMsgDTO.class, (SocketIOClient client, SocketMsgDTO socketMsg, AckRequest ackRequest) -> eventAction.onData(client, socketMsg));
+		LOGGER.info("增加websocket监听事件。eventName: {}", eventName);
+		
+		socketIOServer.addEventListener(eventName, SocketMsgDTO.class, (SocketIOClient client, SocketMsgDTO socketMsg, AckRequest ackRequest) -> {
+			LOGGER.info("websocket事件触发。eventName: {}, socketMsg: {}", eventName, JsonUtils.toJson(socketMsg));
+			eventAction.onData(client, socketMsg);
+		});
 	}
 	
 	public static void pushMsg(String eventName, SocketIOClient client, SocketMsgDTO socketMsg) {
+		LOGGER.info("推送消息。socketMsg: {}", JsonUtils.toJson(socketMsg));
+		
 		client.sendEvent(eventName, new AckCallback<String>(String.class) {
 			@Override
 			public void onSuccess(String result) {
-				LOGGER.info("消息发送成功。消息: {}, result: {}", JsonUtils.toJson(socketMsg), result);
+				LOGGER.info("推送消息成功。eventName: {}, socketMsg: {}, result: {}", eventName, JsonUtils.toJson(socketMsg), result);
 			}
 		}, socketMsg);
 	}
 	
 	private static void initEventListener() {
 		WebSocketServer.addEventListener("regist", (client, socketMsg) -> {
-			LOGGER.info("socketMsg: {}", JsonUtils.toJson(socketMsg));
 			
-			new Thread(() -> {
-				try {
-					Thread.sleep(1000 * 3);
-					
-					WebSocketServer.pushMsg("registCallback", client, socketMsg);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}).start();
+			try {
+				Thread.sleep(1000 * 3);
+				
+				WebSocketServer.pushMsg("registCallback", client, socketMsg);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		});
 	}
 }
