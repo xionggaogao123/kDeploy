@@ -17,7 +17,7 @@ import com.lk.kDeploy.util.JsonUtils;
  * @author: lk
  * @since: 2017年11月10日
  */
-public class WebSocketServer {
+public final class WebSocketServer {
 	private static Logger LOGGER = LoggerFactory.getLogger(WebSocketServer.class);
 
 	private static WebSocketServer myServer = null;
@@ -65,6 +65,16 @@ public class WebSocketServer {
 		});
 	}
 	
+	public static void pushMsg(String eventName, String username, SocketMsgDTO socketMsg) {
+		SocketIOClient client = WebSocketClientPool.getClient(username);
+		if (null == client) {
+			LOGGER.info("客户端未注册。username: {}", username);
+			return;
+		}
+		
+		pushMsg(eventName, client, socketMsg);
+	}
+	
 	public static void pushMsg(String eventName, SocketIOClient client, SocketMsgDTO socketMsg) {
 		LOGGER.info("推送消息。socketMsg: {}", JsonUtils.toJson(socketMsg));
 		
@@ -79,13 +89,8 @@ public class WebSocketServer {
 	private static void initEventListener() {
 		WebSocketServer.addEventListener("regist", (client, socketMsg) -> {
 			
-			try {
-				Thread.sleep(1000 * 3);
-				
-				WebSocketServer.pushMsg("registCallback", client, socketMsg);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			String token = (String) socketMsg.getParams().get("token");
+			WebSocketClientPool.registration(token, client);
 		});
 	}
 }

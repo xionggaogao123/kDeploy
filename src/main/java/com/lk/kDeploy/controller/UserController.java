@@ -22,6 +22,8 @@ import com.lk.kDeploy.config.CommonConfig;
 import com.lk.kDeploy.constants.Constants;
 import com.lk.kDeploy.constants.ReturnCode;
 import com.lk.kDeploy.util.RespBuildUtil;
+import com.lk.kDeploy.util.UUIDUtil;
+import com.lk.kDeploy.websocket.WebSocketClientPool;
 
 /**
  * 用户模块接口
@@ -49,7 +51,13 @@ public class UserController {
 		}
 		
 		request.getSession().setAttribute(Constants.SESSION_LOGIN_USER, username);
-		return RespBuildUtil.success();
+		
+		String token = UUIDUtil.getId();
+		WebSocketClientPool.preRegistration(token, username);
+		
+		Map<String, Object> resMap = new HashMap<>();
+		resMap.put("token", token);
+		return RespBuildUtil.success(resMap);
 	}
 	
 	@GetMapping("/session")
@@ -67,6 +75,10 @@ public class UserController {
 	@PostMapping("/logout")
 	@AnonymousAccess
 	public ResponseDTO logout(HttpServletRequest request) {
+		
+		String username = (String) request.getSession().getAttribute(Constants.SESSION_LOGIN_USER);
+		WebSocketClientPool.unregistration(username );
+		
 		request.getSession().invalidate();
 		return RespBuildUtil.success();
 	}
