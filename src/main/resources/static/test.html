@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>kDeploy test</title>
+  </head>
+  <body>
+    <h2>kDeploy test</h2>
+    <button type="button" name="button" onclick="login()">登录</button>
+    <button type="button" name="button" onclick="package()">打包项目</button>
+    <button type="button" name="button" onclick="logout()">登出</button>
+    <hr>
+    <p id="message"></p>
+
+    <script src="js/lib/socket.io.js"></script>
+    <script type="text/javascript">
+      let socket = io("http://localhost:8881")
+
+      socket.on("commandEcho", (data, callback) => {
+        console.log("接收命令日志：")
+        console.log(data);
+
+        setMessageInnerHTML(data.log)
+        callback()
+      })
+
+      window.regist = () => {
+        let data = {
+          params: {
+            token: "888"
+          }
+        }
+        socket.emit("regist", data, (res) => {
+          console.log("注册消息返回：")
+          console.log(res)
+        })
+      }
+
+      //将消息显示在网页上
+      function setMessageInnerHTML(innerHTML) {
+        document.getElementById('message').innerHTML += innerHTML + '<br/>';
+      }
+
+      function login() {
+        let param = {
+          username: "admin",
+          password: "123123"
+        }
+        $api("/api/user/login", "post", param, (resp) -> {
+          console.log("登录成功");
+        })
+      }
+
+      function package() {
+        $api("/api/test/ping", "post", null, (resp) -> {
+          console.log("ping...");
+        })
+      }
+
+      function logout() {
+        $api("/api/user/logout", "post", null, (resp) -> {
+          console.log("登出成功");
+        })
+      }
+    </script>
+  </body>
+</html>

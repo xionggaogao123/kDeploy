@@ -2,40 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>websocket test</title>
+    <title></title>
   </head>
   <body>
-    <h2>websocket test</h2>
-    <p id="message"></p>
 
-    <script src="js/lib/socket.io.js"></script>
-    <script type="text/javascript">
-      let socket = io("http://localhost:8881")
-
-      socket.on("commandEcho", (data, callback) => {
-        console.log("接收命令日志：")
-        console.log(data);
-
-        setMessageInnerHTML(data.log)
-        callback()
-      })
-
-      window.regist = () => {
-        let data = {
-          params: {
-            token: "123"
-          }
-        }
-        socket.emit("regist", data, (res) => {
-          console.log("注册消息返回：")
-          console.log(res)
-        })
-      }
-
-      //将消息显示在网页上
-      function setMessageInnerHTML(innerHTML) {
-        document.getElementById('message').innerHTML += innerHTML + '<br/>';
-      }
-    </script>
   </body>
 </html>
