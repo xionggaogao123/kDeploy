@@ -14,7 +14,8 @@ public class ConsoleOutputStream extends OutputStream {
             synchronized (this) {
             	stringBuilder.append((char) b);
                 if ((b == '\n')) {
-                	System.out.println(stringBuilder.toString());
+                	System.out.println(new String(stringBuilder.toString().getBytes(), "UTF-8"));
+//                	System.out.println(new String(stringBuilder.toString().getBytes("GBK"), "UTF-8"));
                 	stringBuilder.setLength(0);
                 }
             }

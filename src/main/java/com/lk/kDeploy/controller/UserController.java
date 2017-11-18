@@ -52,7 +52,8 @@ public class UserController {
 		
 		request.getSession().setAttribute(Constants.SESSION_LOGIN_USER, username);
 		
-		String token = UUIDUtil.getId();
+//		String token = UUIDUtil.getId(); 开发
+		String token = "888";
 		WebSocketClientPool.preRegistration(token, username);
 		
 		Map<String, Object> resMap = new HashMap<>();

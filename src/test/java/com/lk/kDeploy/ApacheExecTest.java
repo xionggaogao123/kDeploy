@@ -160,8 +160,36 @@ public class ApacheExecTest {
 		LOG.info("start...");
 		executor.execute(cmdLine, resultHandler);
 		
-		Thread.sleep(1000 * 10);
+//		Thread.sleep(1000 * 10);
 		LOG.info("end");
+	}
+	
+	/**
+	 * 无限循环判断命令执行完毕
+	 * @throws ExecuteException
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	@Test
+	public void testCmd6() throws ExecuteException, IOException, InterruptedException {
+		final CommandLine cmdLine = CommandLine.parse("ping www.baidu.com");
+		final ExecuteWatchdog watchdog = new ExecuteWatchdog(Integer.MAX_VALUE);
+		final DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
+		DefaultExecutor executor = new DefaultExecutor();
+
+		executor.setWatchdog(watchdog);
+		executor.execute(cmdLine, resultHandler);
+		
+		while (!resultHandler.hasResult()) {
+			LOG.info("嘿");
+			Thread.sleep(800);
+		}
+		
+		LOG.info("--> Watchdog is watching ? " + watchdog.isWatching());
+		LOG.info("--> Watchdog should have killed the process : " + watchdog.killedProcess());
+		LOG.info("--> wait result is : " + resultHandler.hasResult());
+		LOG.info("--> exit value is : " + resultHandler.getExitValue());
+		LOG.info("--> exception is : " + resultHandler.getException());
 	}
 	
 }

@@ -46,4 +46,13 @@ public class TestController {
 		return RespBuildUtil.success(project);
 	}
 	
+	
+	@PostMapping("/ping")
+	@AnonymousAccess
+	public ResponseDTO testPing() {
+		Project project = new Project();
+		project.setId("998");
+		return RespBuildUtil.success(project);
+	}
+	
 }
