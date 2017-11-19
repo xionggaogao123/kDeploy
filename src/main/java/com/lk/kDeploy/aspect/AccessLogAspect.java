@@ -76,7 +76,11 @@ public class AccessLogAspect {
 			}
 			
 			String uri = request.getRequestURI();
-			LOG.info("访问接口, uri: {}, request: {}", uri, JsonUtils.toJson(reqDto));
+			if (null == reqDto) {
+				LOG.info("访问接口, uri: {}, request: null", uri);
+			} else {
+				LOG.info("访问接口, uri: {}, request: {}", uri, JsonUtils.toJson(reqDto));
+			}
 			
 			validateAccess(method, request);
 			if (null != reqDto) validateRequired(method, reqDto.getParams());
