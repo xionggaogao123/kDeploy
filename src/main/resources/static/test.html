@@ -3,24 +3,40 @@
   <head>
     <meta charset="utf-8">
     <title>kDeploy test</title>
+    <style media="screen">
+      #console {
+        font-family: "Source Code Pro",Consolas,Menlo,Monaco,"Courier New",monospace;
+        height: 600px;
+        overflow: auto;
+        color: #aaa;
+        background-color: #333;
+      }
+    </style>
   </head>
   <body>
     <h2>kDeploy test</h2>
     <button type="button" name="button" onclick="login()">登录</button>
-    <button type="button" name="button" onclick="package()">打包项目</button>
     <button type="button" name="button" onclick="logout()">登出</button>
+    <span>|</span>
+    <input type="text" name="command" value="">
+    <button type="button" name="button" onclick="execute()">执行命令</button>
     <hr>
-    <p id="message"></p>
+    <div id="console">
+      <p id="message"></p>
+    </div>
+    <hr>
+    <button type="button" name="button" onclick="clean()">清除日志</button>
 
     <script src="js/lib/socket.io.js"></script>
+    <script src="js/lib/axios.min.js"></script>
+    <script src="js/widget.js"></script>
     <script type="text/javascript">
       let socket = io("http://localhost:8881")
 
       socket.on("commandEcho", (data, callback) => {
-        console.log("接收命令日志：")
-        console.log(data);
+        console.log(data.params.log);
 
-        setMessageInnerHTML(data.log)
+        setMessageInnerHTML(data.params.log)
         callback()
       })
 
@@ -31,36 +47,51 @@
           }
         }
         socket.emit("regist", data, (res) => {
-          console.log("注册消息返回：")
-          console.log(res)
+          setMessageInnerHTML("登录注册成功\r\n\r\n")
         })
       }
 
       //将消息显示在网页上
-      function setMessageInnerHTML(innerHTML) {
-        document.getElementById('message').innerHTML += innerHTML + '<br/>';
+      function setMessageInnerHTML(innerText) {
+        document.getElementById('message').innerText += innerText;
+        let consoleDiv = document.getElementById('console')
+        consoleDiv.scrollTop = consoleDiv.scrollHeight;
       }
 
       function login() {
         let param = {
-          username: "admin",
-          password: "123123"
+          params: {
+            username: "admin",
+            password: "263fec58861449aacc1c328a4aff64aff4c62df4a2d50b3f207fa89b6e242c9aa778e7a8baeffef85b6ca6d2e7dc16ff0a760d59c13c238f6bcdc32f8ce9cc62"
+          }
         }
-        $api("/api/user/login", "post", param, (resp) -> {
-          console.log("登录成功");
+        $api("api/user/login", "post", param, (data) => {
+          if (data.returnCode == 0) {
+            regist()
+          }
         })
       }
 
-      function package() {
-        $api("/api/test/ping", "post", null, (resp) -> {
+      function execute() {
+        let cmd = document.getElementsByName("command")[0].value
+        let param = {
+          params: {
+            command: cmd
+          }
+        }
+        $api("api/test/ping", "post", param, (data) => {
           console.log("ping...");
         })
       }
 
       function logout() {
-        $api("/api/user/logout", "post", null, (resp) -> {
+        $api("api/user/logout", "post", null, (data) => {
           console.log("登出成功");
         })
+      }
+
+      function clean() {
+        document.getElementById('message').innerText = "";
       }
     </script>
   </body>

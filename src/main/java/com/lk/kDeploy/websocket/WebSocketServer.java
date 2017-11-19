@@ -9,6 +9,7 @@ import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.lk.kDeploy.base.dto.SocketMsgDTO;
+import com.lk.kDeploy.constants.Constants;
 import com.lk.kDeploy.util.JsonUtils;
 
 /**
@@ -68,7 +69,7 @@ public final class WebSocketServer {
 	public static void pushMsg(String eventName, String username, SocketMsgDTO socketMsg) {
 		SocketIOClient client = WebSocketClientPool.getClient(username);
 		if (null == client) {
-			LOGGER.info("客户端未注册。username: {}", username);
+			LOGGER.info("推送失败，客户端未注册。username: {}", username);
 			return;
 		}
 		
@@ -87,7 +88,7 @@ public final class WebSocketServer {
 	}
 	
 	private static void initEventListener() {
-		WebSocketServer.addEventListener("regist", (client, socketMsg) -> {
+		WebSocketServer.addEventListener(Constants.SOCKET_EVENT_REGIST, (client, socketMsg) -> {
 			
 			String token = (String) socketMsg.getParams().get("token");
 			WebSocketClientPool.registration(token, client);

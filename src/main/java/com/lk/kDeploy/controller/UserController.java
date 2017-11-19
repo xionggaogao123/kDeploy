@@ -22,7 +22,6 @@ import com.lk.kDeploy.config.CommonConfig;
 import com.lk.kDeploy.constants.Constants;
 import com.lk.kDeploy.constants.ReturnCode;
 import com.lk.kDeploy.util.RespBuildUtil;
-import com.lk.kDeploy.util.UUIDUtil;
 import com.lk.kDeploy.websocket.WebSocketClientPool;
 
 /**

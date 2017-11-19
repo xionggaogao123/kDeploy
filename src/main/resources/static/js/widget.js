@@ -3,10 +3,12 @@ window.$api = (url, method, param, fn) => {
     method: method,
     url: url,
     data: param
-  }).then((response) => {
-    console.log(response)
+  }).then((resp) => {
+    console.log(resp)
+    let data = resp.data
+
     if (typeof fn === "function") {
-      fn(response)
+      fn(data)
     }
 
     if (data.returnCode != 0) {

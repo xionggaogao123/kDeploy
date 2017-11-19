@@ -1,7 +1,11 @@
 package com.lk.kDeploy.controller;
 
+import java.io.IOException;
+
+import org.apache.commons.exec.ExecuteException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +17,7 @@ import com.lk.kDeploy.base.annotion.ValidateRequired;
 import com.lk.kDeploy.base.dto.RequestDTO;
 import com.lk.kDeploy.base.dto.ResponseDTO;
 import com.lk.kDeploy.entity.Project;
+import com.lk.kDeploy.service.CommandService;
 import com.lk.kDeploy.util.JsonUtils;
 import com.lk.kDeploy.util.RespBuildUtil;
 
@@ -27,6 +32,9 @@ import com.lk.kDeploy.util.RespBuildUtil;
 public class TestController {
 	private static final Logger LOG = LoggerFactory.getLogger(TestController.class);
 
+	@Autowired
+	private CommandService commandService;
+	
 	@PostMapping
 	@AnonymousAccess
 	@ValidateRequired({"name", "type"})
@@ -48,11 +56,10 @@ public class TestController {
 	
 	
 	@PostMapping("/ping")
-	@AnonymousAccess
-	public ResponseDTO testPing() {
-		Project project = new Project();
-		project.setId("998");
-		return RespBuildUtil.success(project);
+	public ResponseDTO testPing(@RequestBody RequestDTO req) throws ExecuteException, IOException, InterruptedException {
+		String command = req.getStringParam("command");
+		commandService.execute("admin", command);
+		return RespBuildUtil.success();
 	}
 	
 }

@@ -12,9 +12,9 @@ import org.apache.commons.exec.PumpStreamHandler;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
-import com.lk.kDeploy.ConsoleOutputStream;
-import com.lk.kDeploy.controller.TestController;
+import com.lk.kDeploy.websocket.WebSocketOutputStream;
 
 /**
  * 
@@ -22,8 +22,9 @@ import com.lk.kDeploy.controller.TestController;
  * @author: lk
  * @since: 2017年11月18日
  */
+@Service
 public class CommandService {
-	private static final Logger LOG = LoggerFactory.getLogger(TestController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CommandService.class);
 
 	@Test
 	public void testt() throws ExecuteException, IOException, InterruptedException {
@@ -40,15 +41,14 @@ public class CommandService {
 		executor.setWatchdog(watchdog);
 		executor.setExitValues(null);
 		
-		OutputStream outputStream = new ConsoleOutputStream();
+		OutputStream outputStream = new WebSocketOutputStream(username, "projectId");
 		executor.setStreamHandler(new PumpStreamHandler(outputStream, outputStream));
 		
 		LOG.info("start...");
 		executor.execute(cmdLine, resultHandler);
 		
 		while (!resultHandler.hasResult()) {
-			LOG.info("---还没好");
-			Thread.sleep(800);
+			Thread.sleep(500);
 		}
 		
 		LOG.info("--> Watchdog is watching ? " + watchdog.isWatching());
