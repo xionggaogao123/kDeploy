@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <property name="PROJECT_NAME" value="sprintStart" />
+    <property name="PROJECT_NAME" value="kDeploy" />
     <!-- test文件路径 -->
     <property name="TEST_FILE_PATH" value="./logs" />
     <!-- 文件输出格式 -->
