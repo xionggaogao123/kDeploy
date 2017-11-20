@@ -47,6 +47,10 @@ public class WebSocketOutputStream extends OutputStream {
 
 	@Override
 	public void flush() throws UnsupportedEncodingException {
+		LOG.info("UTF-8: {}", new String(stringBuilder.toString().getBytes(), "UTF-8"));
+		LOG.info("GBK: {}", new String(stringBuilder.toString().getBytes(), "GBK"));
+		LOG.info("ISO-8859-1: {}", new String(stringBuilder.toString().getBytes(), "ISO-8859-1"));
+		
 		String log = new String(stringBuilder.toString().getBytes(), "UTF-8");
     	stringBuilder.setLength(0);
     	
