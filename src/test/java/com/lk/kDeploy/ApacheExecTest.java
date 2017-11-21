@@ -6,9 +6,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.List;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecuteResultHandler;
@@ -22,6 +24,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.lk.kDeploy.util.ExecuteUtil;
+import com.lk.kDeploy.util.ExecuteUtil.ExecResult;
 
 public class ApacheExecTest {
 	protected static Logger LOG = LoggerFactory.getLogger(ApacheExecTest.class);
@@ -147,7 +152,8 @@ public class ApacheExecTest {
 		final ExecuteWatchdog watchdog = new ExecuteWatchdog(Integer.MAX_VALUE);
 		final DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
 		
-		String cmdStr = "ping www.baidu.com -t";
+		String cmdStr = "cmd /c echo 你好世界";
+//		String cmdStr = "ping www.baidu.com -t";
 		final CommandLine cmdLine = CommandLine.parse(cmdStr);
 		DefaultExecutor executor = new DefaultExecutor();
 		executor.setWatchdog(watchdog);
@@ -160,7 +166,7 @@ public class ApacheExecTest {
 		LOG.info("start...");
 		executor.execute(cmdLine, resultHandler);
 		
-//		Thread.sleep(1000 * 10);
+		Thread.sleep(1000 * 1);
 		LOG.info("end");
 	}
 	
@@ -190,6 +196,16 @@ public class ApacheExecTest {
 		LOG.info("--> wait result is : " + resultHandler.hasResult());
 		LOG.info("--> exit value is : " + resultHandler.getExitValue());
 		LOG.info("--> exception is : " + resultHandler.getException());
+	}
+	
+	@Test
+	public void testCmd7() throws Exception {
+		String cmd = "cmd /c echo 你好世界";
+	     ExecResult result = ExecuteUtil.execCmd(cmd, 0);
+	     List<String> lines = result.getLines();
+	     for (String line:lines) {
+	         System.out.println(line);
+	     }
 	}
 	
 }
