@@ -23,6 +23,9 @@ public class CommonConfig {
 	
 	@Value("${kdeploy.websocket.port}")
 	private Integer websocketPort;
+	
+	@Value("${kdeploy.system-charset}")
+	private String systemCharset;
 
 	public String getUsername() {
 		return username;
@@ -35,5 +38,8 @@ public class CommonConfig {
 	}
 	public Integer getWebsocketPort() {
 		return websocketPort;
+	}
+	public String getSystemCharset() {
+		return systemCharset;
 	}
 }

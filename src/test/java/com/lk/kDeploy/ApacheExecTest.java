@@ -1,16 +1,12 @@
 package com.lk.kDeploy;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.util.List;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.nio.charset.Charset;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecuteResultHandler;
@@ -18,15 +14,9 @@ import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.PumpStreamHandler;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.lk.kDeploy.util.ExecuteUtil;
-import com.lk.kDeploy.util.ExecuteUtil.ExecResult;
 
 public class ApacheExecTest {
 	protected static Logger LOG = LoggerFactory.getLogger(ApacheExecTest.class);
@@ -147,29 +137,6 @@ public class ApacheExecTest {
 		LOG.info("end");
 	}
 	
-	@Test
-	public void testCmd5() throws ExecuteException, IOException, InterruptedException {
-		final ExecuteWatchdog watchdog = new ExecuteWatchdog(Integer.MAX_VALUE);
-		final DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
-		
-		String cmdStr = "cmd /c echo 你好世界";
-//		String cmdStr = "ping www.baidu.com -t";
-		final CommandLine cmdLine = CommandLine.parse(cmdStr);
-		DefaultExecutor executor = new DefaultExecutor();
-		executor.setWatchdog(watchdog);
-		executor.setExitValues(null);
-		
-		OutputStream outputStream = new ConsoleOutputStream();
-//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		executor.setStreamHandler(new PumpStreamHandler(outputStream, outputStream));
-		
-		LOG.info("start...");
-		executor.execute(cmdLine, resultHandler);
-		
-		Thread.sleep(1000 * 1);
-		LOG.info("end");
-	}
-	
 	/**
 	 * 无限循环判断命令执行完毕
 	 * @throws ExecuteException
@@ -198,14 +165,63 @@ public class ApacheExecTest {
 		LOG.info("--> exception is : " + resultHandler.getException());
 	}
 	
+	/**
+	 * 中文问题
+	 * @throws ExecuteException
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	@Test
-	public void testCmd7() throws Exception {
-		String cmd = "cmd /c echo 你好世界";
-	     ExecResult result = ExecuteUtil.execCmd(cmd, 0);
-	     List<String> lines = result.getLines();
-	     for (String line:lines) {
-	         System.out.println(line);
-	     }
+	public void testCmd7() throws ExecuteException, IOException, InterruptedException {
+		String cmdStr = "ping www.baidu.com";
+//		String cmdStr = "cmd /c echo 你好世界";
+		
+		final ExecuteWatchdog watchdog = new ExecuteWatchdog(Integer.MAX_VALUE);
+		final DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
+		final CommandLine cmdLine = CommandLine.parse(cmdStr);
+		
+		DefaultExecutor executor = new DefaultExecutor();
+		executor.setWatchdog(watchdog);
+		executor.setExitValues(null);
+		
+		PipedOutputStream outputStream = new PipedOutputStream();
+        PipedInputStream pis = new PipedInputStream(outputStream);
+		
+		executor.setStreamHandler(new PumpStreamHandler(outputStream, outputStream));
+		
+		Charset encoding = getEncoding();
+		LOG.info("系统编码", encoding.toString());
+		
+		InputStreamReader inStreamReader = new InputStreamReader(pis, "GBK");
+		BufferedReader br = new BufferedReader(inStreamReader);
+        
+        LOG.info("start...");
+		executor.execute(cmdLine, resultHandler);
+        
+        String line = null;
+        while((line = br.readLine()) != null) {
+//            sb.append(line+"\n");
+        	LOG.info(line);
+        }
+        pis.close();
+		
+//		while (!resultHandler.hasResult()) {
+//			Thread.sleep(500);
+//		}
+        
+        Thread.sleep(500);
+        
+		LOG.info("--> Watchdog is watching ? " + watchdog.isWatching());
+		LOG.info("--> Watchdog should have killed the process : " + watchdog.killedProcess());
+		LOG.info("--> wait result is : " + resultHandler.hasResult());
+		LOG.info("--> exit value is : " + resultHandler.getExitValue());
+		LOG.info("--> exception is : " + resultHandler.getException());
+		
+		LOG.info("end");
+	}
+
+	private Charset getEncoding() {
+		return Charset.defaultCharset();
 	}
 	
 }

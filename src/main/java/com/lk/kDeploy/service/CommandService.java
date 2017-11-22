@@ -1,13 +1,12 @@
 package com.lk.kDeploy.service;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecuteResultHandler;
@@ -17,9 +16,13 @@ import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lk.kDeploy.websocket.WebSocketOutputStream;
+import com.lk.kDeploy.base.dto.SocketMsgDTO;
+import com.lk.kDeploy.config.CommonConfig;
+import com.lk.kDeploy.constants.Constants;
+import com.lk.kDeploy.websocket.WebSocketServer;
 
 /**
  * 
@@ -31,6 +34,9 @@ import com.lk.kDeploy.websocket.WebSocketOutputStream;
 public class CommandService {
 	private static final Logger LOG = LoggerFactory.getLogger(CommandService.class);
 
+	@Autowired
+	private CommonConfig commonConfig;
+	
 //	public void execute(String username, String command) throws ExecuteException, IOException, InterruptedException {
 //		
 //		final ExecuteWatchdog watchdog = new ExecuteWatchdog(Integer.MAX_VALUE);
@@ -62,7 +68,7 @@ public class CommandService {
 	
 	public void execute(String username, String command) throws ExecuteException, IOException, InterruptedException {
 		
-		final ExecuteWatchdog watchdog = new ExecuteWatchdog(Integer.MAX_VALUE);
+		final ExecuteWatchdog watchdog = new ExecuteWatchdog(Integer.MAX_VALUE); // TODO 问题大大的
 		final DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
 		final CommandLine cmdLine = CommandLine.parse(command);
 		
@@ -76,24 +82,26 @@ public class CommandService {
 		
 		executor.setStreamHandler(new PumpStreamHandler(outputStream, outputStream));
 		
-		InputStreamReader inStreamReader = new InputStreamReader(pis, getEncoding());
+		InputStreamReader inStreamReader = new InputStreamReader(pis, commonConfig.getSystemCharset());
 		BufferedReader br = new BufferedReader(inStreamReader);
-        StringBuilder sb = new StringBuilder();
         
-        br.readLine()
+        LOG.info("start...");
+		executor.execute(cmdLine, resultHandler);
         
         String line = null;
         while((line = br.readLine()) != null) {
-            sb.append(line+"\n");
+            
+        	Map<String, Object> params = new HashMap<>();
+        	params.put("id", "projectId");
+        	params.put("log", line + "\n");
+        	
+        	SocketMsgDTO socketMsg = new SocketMsgDTO();
+    		socketMsg.setParams(params);
+    		WebSocketServer.pushMsg(Constants.SOCKET_EVENT_COMMAND_ECHO, username, socketMsg);
         }
         pis.close();
 		
-		LOG.info("start...");
-		executor.execute(cmdLine, resultHandler);
-		
-		while (!resultHandler.hasResult()) {
-			Thread.sleep(500);
-		}
+        Thread.sleep(500);
 		
 		LOG.info("--> Watchdog is watching ? " + watchdog.isWatching());
 		LOG.info("--> Watchdog should have killed the process : " + watchdog.killedProcess());
@@ -104,8 +112,4 @@ public class CommandService {
 		LOG.info("end");
 	}
 
-	private String getEncoding() {
-		return Charset.defaultCharset();
-	}
-	
 }
