@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <title>kDeploy test</title>
     <style media="screen">
       #console {
@@ -47,7 +48,7 @@
           }
         }
         socket.emit("regist", data, (res) => {
-          setMessageInnerHTML("登录注册成功\r\n\r\n")
+          setMessageInnerHTML("\r\n登录注册成功\r\n\r\n")
         })
       }
 
@@ -80,7 +81,7 @@
           }
         }
         $api("api/test/ping", "post", param, (data) => {
-          console.log("ping...");
+    	  setMessageInnerHTML("执行完毕\r\n\r\n")
         })
       }
 

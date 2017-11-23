@@ -76,7 +76,7 @@ public class CommandService {
 		executor.setExitValues(null);
 		
 //		OutputStream outputStream = new WebSocketOutputStream(username, "projectId");
-		PipedOutputStream outputStream = new MyPipedOutputStream();
+		PipedOutputStream outputStream = new PipedOutputStream();
         PipedInputStream pis = new PipedInputStream(outputStream);
 		
 		executor.setStreamHandler(new PumpStreamHandler(outputStream, outputStream));
@@ -90,25 +90,22 @@ public class CommandService {
 		Thread.sleep(500); // 休息一下让命令开始执行
 		
         String line = null;
-        while((line = br.readLine()) != null) {
+        while ((line = br.readLine()) != null || !resultHandler.hasResult()) {
+        	if (null == line) {
+        		LOG.info("都不到日志，但命令未结束");
+        		Thread.sleep(200);
+				continue;
+			}
             
         	SocketMsgDTO socketMsg = new SocketMsgDTO();
         	socketMsg.putParam("id", "projectId");
         	socketMsg.putParam("log", line + "\n");
     		WebSocketServer.pushMsg(Constants.SOCKET_EVENT_COMMAND_ECHO, username, socketMsg);
         }
-		
-        Thread.sleep(500); // 休息一下让命令执行结束
-        
-        while ((line = br.readLine()) != null) {
-            
-        	SocketMsgDTO socketMsg = new SocketMsgDTO();
-        	socketMsg.putParam("id", "projectId");
-        	socketMsg.putParam("log", line + "\n");
-    		WebSocketServer.pushMsg(Constants.SOCKET_EVENT_COMMAND_ECHO, username, socketMsg);
-        }
-		
         pis.close();
+        
+        Thread.sleep(500); // 休息一下让命令执行结束
+		
 		LOG.info("--> Watchdog is watching ? " + watchdog.isWatching());
 		LOG.info("--> Watchdog should have killed the process : " + watchdog.killedProcess());
 		LOG.info("--> wait result is : " + resultHandler.hasResult());
