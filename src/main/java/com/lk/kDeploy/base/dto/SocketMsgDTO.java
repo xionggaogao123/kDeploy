@@ -1,5 +1,6 @@
 package com.lk.kDeploy.base.dto;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -12,6 +13,14 @@ public class SocketMsgDTO {
 
 	private String type;
 	private Map<String, Object> params;
+	
+	public void putParam(String key, Object value) {
+		if (null == params) {
+			params = new HashMap<>();
+		}
+		params.put(key, value);
+	}
+	
 	public String getType() {
 		return type;
 	}

@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecuteResultHandler;
@@ -88,20 +86,19 @@ public class CommandService {
         LOG.info("start...");
 		executor.execute(cmdLine, resultHandler);
         
+		Thread.sleep(500); // 休息一下让命令开始执行
+		
         String line = null;
         while((line = br.readLine()) != null) {
             
-        	Map<String, Object> params = new HashMap<>();
-        	params.put("id", "projectId");
-        	params.put("log", line + "\n");
-        	
         	SocketMsgDTO socketMsg = new SocketMsgDTO();
-    		socketMsg.setParams(params);
+        	socketMsg.putParam("id", "projectId");
+        	socketMsg.putParam("log", line + "\n");
     		WebSocketServer.pushMsg(Constants.SOCKET_EVENT_COMMAND_ECHO, username, socketMsg);
         }
         pis.close();
 		
-        Thread.sleep(500);
+        Thread.sleep(500); // 休息一下让命令执行结束
 		
 		LOG.info("--> Watchdog is watching ? " + watchdog.isWatching());
 		LOG.info("--> Watchdog should have killed the process : " + watchdog.killedProcess());
