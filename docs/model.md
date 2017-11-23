@@ -39,9 +39,9 @@ CREATE TABLE `user` (
 | description | 描述 | VARCHAR(64) |  |
 | git_url | 远程git仓库地址 | VARCHAR(64) |  |
 | branch | 分支名 | VARCHAR(16) |  |
-| project_source_path | 项目源码路径 | VARCHAR(32) |  |
-| project_deploy_path | 项目发布路径 | VARCHAR(32) |  |
-| package_name | 包名 | VARCHAR(16) | 完整包名，如：demo.jar |
+| project_source_path | 项目源码路径 | VARCHAR(64) |  |
+| project_deploy_path | 项目发布路径 | VARCHAR(64) |  |
+| package_name | 包名 | VARCHAR(32) | 完整包名，如：demo.jar |
 | deploy_sub_module | 发布子模块名称 | VARCHAR(16) | 发布的子模块文件夹名 |
 | deploy_way | 发布方法 | INT | 1: 直接运行; 2: 拷贝到容器 |
 | custom_start | 自定义启动命令 | VARCHAR(16) |  |
@@ -55,9 +55,9 @@ CREATE TABLE `project` (
   `description` VARCHAR(64) COMMENT '描述',
   `git_url` VARCHAR(64) NOT NULL COMMENT '远程git仓库地址',
   `branch` VARCHAR(16) COMMENT '分支名',
-  `project_source_path` VARCHAR(32) NOT NULL COMMENT '项目源码路径',
-  `project_deploy_path` VARCHAR(32) NOT NULL COMMENT '项目发布路径',
-  `package_name` VARCHAR(16) NOT NULL COMMENT '包名 完整包名，如：demo.jar',
+  `project_source_path` VARCHAR(64) NOT NULL COMMENT '项目源码路径',
+  `project_deploy_path` VARCHAR(64) NOT NULL COMMENT '项目发布路径',
+  `package_name` VARCHAR(32) NOT NULL COMMENT '包名 完整包名，如：demo.jar',
   `deploy_sub_module` VARCHAR(16) COMMENT '发布子模块名称 发布的子模块文件夹名',
   `deploy_way` INT COMMENT '发布方法 1: 直接运行; 2: 拷贝到容器',
   `custom_start` VARCHAR(16) COMMENT '自定义启动命令',

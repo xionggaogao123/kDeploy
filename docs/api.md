@@ -135,18 +135,18 @@ Error:
 Response:
 ${查询单条数据} -> {
   id: "",
-  name: "",
-  description: "",
-  gitUrl: "",
-  branch: "",
-  projectSourcePath: "",
-  projectDeployPath: "",
-  packageName: "",
-  deploySubModule: "",
-  deployWay: "",
-  customStart: "",
-  webContainerId: "",
-  createAt: "",
+  name: "", // 名称
+  description: "", // 描述
+  gitUrl: "", // 远程git仓库地址
+  branch: "", // 分支名
+  projectSourcePath: "", // 项目源码路径
+  projectDeployPath: "", // 项目发布路径
+  packageName: "", // 包名
+  deploySubModule: "", // 发布子模块名称
+  deployWay: "", // 发布方法
+  customStart: "", // 自定义启动命令
+  webContainerId: "", // 容器id
+  createAt: "", // 创建时间
   status: 0, // 状态。0 未部署, 1 启动中, 2 已停止
 }
 ~~~
@@ -155,17 +155,17 @@ ${查询单条数据} -> {
 ~~~js
 Response:
 {
-  name: "",
-  description: "",
-  gitUrl: "",
-  branch: "",
-  projectSourcePath: "",
-  projectDeployPath: "",
-  packageName: "",
-  deploySubModule: "",
-  deployWay: "",
-  customStart: "",
-  webContainerId: "",
+  name: "", // 名称
+  description: "", // 描述. 选填
+  gitUrl: "", // 远程git仓库地址
+  branch: "", // 分支名. 选填
+  projectSourcePath: "", // 项目源码路径
+  projectDeployPath: "", // 项目发布路径
+  packageName: "", // 包名
+  deploySubModule: "", // 发布子模块名称. 选填
+  deployWay: 1, // 发布方法. 1: 直接运行; 2: 拷贝到容器
+  customStart: "", // 自定义启动命令. 选填
+  webContainerId: "" // 容器id. 发布方法为拷贝到容器时必填
 }
 
 Response:
@@ -177,17 +177,18 @@ ${操作结果}
 ~~~js
 Response:
 {
-  name: "", // 全部更新参数选填
-  description: "",
-  gitUrl: "",
-  branch: "",
-  projectSourcePath: "",
-  projectDeployPath: "",
-  packageName: "",
-  deploySubModule: "",
-  deployWay: "",
-  customStart: "",
-  webContainerId: "",
+	// 全部更新参数选填
+  name: "", // 名称
+  description: "", // 描述
+  gitUrl: "", // 远程git仓库地址
+  branch: "", // 分支名
+  projectSourcePath: "", // 项目源码路径
+  projectDeployPath: "", // 项目发布路径
+  packageName: "", // 包名
+  deploySubModule: "", // 发布子模块名称
+  deployWay: "", // 发布方法
+  customStart: "", // 自定义启动命令
+  webContainerId: "", // 容器id
 }
 
 Response:
@@ -217,6 +218,7 @@ ${操作结果}
 ### 发送消息接口
 
 #### 注册websocket `regist`
+登录之后需要推送此消息，绑定用户和websocket客户端
 ~~~js
 Data:
 {
