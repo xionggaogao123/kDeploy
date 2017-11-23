@@ -26,6 +26,10 @@ public interface ReturnCode {
      * 缺少分页参数
      */
     int PAGE_PARAM_BLANK_ERROR = 103;
+    /**
+     * 找不到对象
+     */
+    int OBJECT_NOT_FOUND = 104;
     
     /*
      * 用户模块
@@ -34,4 +38,8 @@ public interface ReturnCode {
      * 用户名或密码不正确
      */
     int USERNAME_OR_PASSWORD_ERROR = 201;
+    
+    /*
+     * 项目模块
+     */
 }

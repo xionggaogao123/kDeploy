@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lk.kDeploy.base.annotion.AnonymousAccess;
+import com.lk.kDeploy.base.annotion.ValidateRequired;
 import com.lk.kDeploy.base.dto.RequestDTO;
 import com.lk.kDeploy.base.dto.ResponseDTO;
 import com.lk.kDeploy.config.CommonConfig;
@@ -40,6 +41,7 @@ public class UserController {
 	
 	@PostMapping("/login")
 	@AnonymousAccess
+	@ValidateRequired({"username", "password"})
 	public ResponseDTO login(@RequestBody RequestDTO reqDto, HttpServletRequest request) {
 		String username = reqDto.getStringParam("username");
 		String password = reqDto.getStringParam("password");

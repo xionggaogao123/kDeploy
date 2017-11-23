@@ -25,8 +25,30 @@ public class ProjectService {
 	}
 
 	public int count(String name) {
-		Project java = new Project();
-		java.setName(name);
-		return projectMapper.selectCount(java);
+		return projectMapper.count(name);
 	}
+
+	public Project getById(String id) {
+		Project java = new Project();
+		java.setId(id);
+		return projectMapper.selectOne(java);
+	}
+	
+	public void save(Project project) {
+		projectMapper.insert(project);
+	}
+	
+	public void update(Project project) {
+		projectMapper.updateByPrimaryKey(project);
+	}
+	
+	public void delete(String id) {
+		projectMapper.deleteByPrimaryKey(id);
+	}
+	
+	public Integer getStatus(String id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

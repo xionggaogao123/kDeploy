@@ -58,7 +58,7 @@ public class TestController {
 	@PostMapping("/ping")
 	public ResponseDTO testPing(@RequestBody RequestDTO req) throws ExecuteException, IOException, InterruptedException {
 		String command = req.getStringParam("command");
-		commandService.execute("admin", command);
+		commandService.executeAndPushLog("admin", command);
 		return RespBuildUtil.success();
 	}
 	

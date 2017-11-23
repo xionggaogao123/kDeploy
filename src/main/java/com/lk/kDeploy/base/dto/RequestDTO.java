@@ -56,6 +56,10 @@ public class RequestDTO {
 	public Integer getSelectFrom() {
 		return pageSize * (page - 1);
 	}
+	
+	public boolean hasParam(String key) {
+		return params.containsKey(key);
+	}
 
 	public Integer getPage() {
 		return page;

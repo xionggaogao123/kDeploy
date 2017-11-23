@@ -1,6 +1,7 @@
 package com.lk.kDeploy.entity;
 
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * 项目实体类
@@ -22,6 +23,10 @@ public class Project extends BaseEntity {
 	private Integer deployWay; // 发布方法 1: 直接运行; 2: 拷贝到容器
 	private String customStart; // 自定义启动命令
 	private String webContainerId; // 容器id
+	
+	@Transient
+	private Integer status; // 状态。0 未部署, 1 启动中, 2 已停止
+	
 	public String getName() {
 		return name;
 	}
@@ -87,5 +92,11 @@ public class Project extends BaseEntity {
 	}
 	public void setWebContainerId(String webContainerId) {
 		this.webContainerId = webContainerId;
+	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 }
