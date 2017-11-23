@@ -82,7 +82,7 @@ public final class WebSocketServer {
 		client.sendEvent(eventName, new AckCallback<String>(String.class) {
 			@Override
 			public void onSuccess(String result) {
-				LOGGER.info("推送消息成功。eventName: {}, socketMsg: {}, result: {}", eventName, JsonUtils.toJson(socketMsg), result);
+//				LOGGER.info("推送消息成功。eventName: {}, socketMsg: {}, result: {}", eventName, JsonUtils.toJson(socketMsg), result);
 			}
 		}, socketMsg);
 	}

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import com.lk.kDeploy.base.dto.SocketMsgDTO;
 import com.lk.kDeploy.config.CommonConfig;
 import com.lk.kDeploy.constants.Constants;
+import com.lk.kDeploy.websocket.MyPipedOutputStream;
 import com.lk.kDeploy.websocket.WebSocketServer;
 
 /**
@@ -75,7 +76,7 @@ public class CommandService {
 		executor.setExitValues(null);
 		
 //		OutputStream outputStream = new WebSocketOutputStream(username, "projectId");
-		PipedOutputStream outputStream = new PipedOutputStream();
+		PipedOutputStream outputStream = new MyPipedOutputStream();
         PipedInputStream pis = new PipedInputStream(outputStream);
 		
 		executor.setStreamHandler(new PumpStreamHandler(outputStream, outputStream));
