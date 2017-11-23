@@ -14,7 +14,7 @@ public class MyPipedOutputStream extends PipedOutputStream {
 	@Override
 	public void write(int b)  throws IOException {
 		stringBuilder.append((char) b);
-        if (b == '\n' && stringBuilder.length() > 512) {
+        if (b == '\n') {
         	
         	LOG.info("回显：{}", stringBuilder.toString());
         	stringBuilder.setLength(0);
