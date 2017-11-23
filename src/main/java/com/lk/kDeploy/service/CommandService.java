@@ -97,10 +97,18 @@ public class CommandService {
         	socketMsg.putParam("log", line + "\n");
     		WebSocketServer.pushMsg(Constants.SOCKET_EVENT_COMMAND_ECHO, username, socketMsg);
         }
-        pis.close();
 		
         Thread.sleep(500); // 休息一下让命令执行结束
+        
+        while ((line = br.readLine()) != null) {
+            
+        	SocketMsgDTO socketMsg = new SocketMsgDTO();
+        	socketMsg.putParam("id", "projectId");
+        	socketMsg.putParam("log", line + "\n");
+    		WebSocketServer.pushMsg(Constants.SOCKET_EVENT_COMMAND_ECHO, username, socketMsg);
+        }
 		
+        pis.close();
 		LOG.info("--> Watchdog is watching ? " + watchdog.isWatching());
 		LOG.info("--> Watchdog should have killed the process : " + watchdog.killedProcess());
 		LOG.info("--> wait result is : " + resultHandler.hasResult());
