@@ -9,16 +9,13 @@ import org.slf4j.LoggerFactory;
 public class MyPipedOutputStream extends PipedOutputStream {
 	private static Logger LOG = LoggerFactory.getLogger(MyPipedOutputStream.class);
 
-	private StringBuilder stringBuilder = new StringBuilder();
-	
-	@Override
-	public void write(int b)  throws IOException {
-		stringBuilder.append((char) b);
-        if (b == '\n') {
+	public void write(byte b[], int off, int len) throws IOException {
+		StringBuilder stringBuilder = new StringBuilder();
+		for (byte c : b) {
+			stringBuilder.append((char) c);
+		}
         	
-        	LOG.info("回显：{}", stringBuilder.toString());
-        	stringBuilder.setLength(0);
-        }
-        super.write(b);
+    	LOG.info("回显：{}", stringBuilder.toString());
+		super.write(b, off, len);
     }
 }
