@@ -94,6 +94,18 @@
       function clean() {
         document.getElementById('message').innerText = "";
       }
+
+      document.onkeydown = (e) => {
+        var code = window.event ? e.keyCode : e.which
+        switch(code) {
+          case 13: // 回车
+            execute()
+            break;
+          case 27: // esc
+            clean()
+            break;
+        }
+      }
     </script>
   </body>
 </html>
