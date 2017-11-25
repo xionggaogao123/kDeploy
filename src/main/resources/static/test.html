@@ -41,10 +41,10 @@
         callback()
       })
 
-      window.regist = () => {
+      window.regist = (token) => {
         let data = {
           params: {
-            token: "888"
+            token: token
           }
         }
         socket.emit("regist", data, (res) => {
@@ -66,9 +66,9 @@
             password: "263fec58861449aacc1c328a4aff64aff4c62df4a2d50b3f207fa89b6e242c9aa778e7a8baeffef85b6ca6d2e7dc16ff0a760d59c13c238f6bcdc32f8ce9cc62"
           }
         }
-        $api("api/user/login", "post", param, (data) => {
-          if (data.returnCode == 0) {
-            regist()
+        $api("api/user/login", "post", param, (res) => {
+          if (res.returnCode == 0) {
+            regist(res.data.token)
           }
         })
       }
@@ -80,13 +80,26 @@
             command: cmd
           }
         }
-        $api("api/test/executeAndPush", "post", param, (data) => {
-    	  setMessageInnerHTML("执行完毕\r\n\r\n")
+        $api("api/test/executeAndPush", "post", param, (res) => {
+    	    setMessageInnerHTML("执行完毕\r\n\r\n")
+        })
+      }
+
+      function execute2() {
+        let cmd = document.getElementsByName("command")[0].value
+        let param = {
+          params: {
+            command: cmd
+          }
+        }
+        $api("api/test/execute", "post", param, (res) => {
+          setMessageInnerHTML(res.data.log)
+    	    setMessageInnerHTML("执行完毕\r\n\r\n")
         })
       }
 
       function logout() {
-        $api("api/user/logout", "post", null, (data) => {
+        $api("api/user/logout", "post", null, (res) => {
           console.log("登出成功");
         })
       }

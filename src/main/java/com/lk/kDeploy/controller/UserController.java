@@ -23,6 +23,7 @@ import com.lk.kDeploy.config.CommonConfig;
 import com.lk.kDeploy.constants.Constants;
 import com.lk.kDeploy.constants.ReturnCode;
 import com.lk.kDeploy.util.RespBuildUtil;
+import com.lk.kDeploy.util.UUIDUtil;
 import com.lk.kDeploy.websocket.WebSocketClientPool;
 
 /**
@@ -53,8 +54,7 @@ public class UserController {
 		
 		request.getSession().setAttribute(Constants.SESSION_LOGIN_USER, username);
 		
-//		String token = UUIDUtil.getId(); 开发
-		String token = "888";
+		String token = UUIDUtil.getId();
 		WebSocketClientPool.preRegistration(token, username);
 		
 		Map<String, Object> resMap = new HashMap<>();
