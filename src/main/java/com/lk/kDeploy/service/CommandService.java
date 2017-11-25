@@ -82,7 +82,7 @@ public class CommandService {
 			executor.execute(cmdLine, resultHandler);
 			
 			String line = null;
-			while ((line = br.readLine()) != null || !resultHandler.hasResult()) {
+			while ((line = br.readLine()) != null) {
 				push(line + "\n", username);
 			}
 		} catch (IOException e) {
