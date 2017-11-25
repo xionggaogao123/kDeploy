@@ -42,4 +42,5 @@ public interface ReturnCode {
     /*
      * 项目模块
      */
+    int EXECUTE_COMMAND_ERROR = 301;
 }

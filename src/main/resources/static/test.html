@@ -80,7 +80,7 @@
             command: cmd
           }
         }
-        $api("api/test/ping", "post", param, (data) => {
+        $api("api/test/executeAndPush", "post", param, (data) => {
     	  setMessageInnerHTML("执行完毕\r\n\r\n")
         })
       }
