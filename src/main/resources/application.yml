@@ -32,11 +32,18 @@ server:
   port: 8880
   
 kdeploy: 
+  # 登录用户名
   username: admin
+  # 登录密码
   password: 123123
+  # 登录密码
   websocket: 
+    # websocket监听地址，0.0.0.0就ok
     host: 0.0.0.0
+    # websocket监听端口号
     port: 8881
   command:
+    # 命令执行回显字符串的编码，与系统有关。linux一般是UTF-8，笔者在windows开发故使用GBK
     system-charset: GBK
+    # 命令执行超时时间，单位：分
     timeout: 6
