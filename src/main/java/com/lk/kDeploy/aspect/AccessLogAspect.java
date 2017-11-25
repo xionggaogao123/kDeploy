@@ -61,8 +61,6 @@ public class AccessLogAspect {
 	@Around("accessLog()")
 	public Object aroundAdvice(ProceedingJoinPoint pjp) throws Throwable {
 		try {
-			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-			
 			MethodSignature ms = (MethodSignature) pjp.getSignature();
 	        Method method = ms.getMethod();
 
@@ -75,6 +73,7 @@ public class AccessLogAspect {
 				}
 			}
 			
+			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 			String uri = request.getRequestURI();
 			if (null == reqDto) {
 				LOG.info("访问接口, uri: {}, request: null", uri);
@@ -93,6 +92,9 @@ public class AccessLogAspect {
 			ResponseDTO errorResp = RespBuildUtil.error(e.getErrorCode());
 			LOG.info("接口返回, errorResp: {}", JsonUtils.toJson(errorResp));
 			return errorResp;
+		} catch (Exception e) {
+			LOG.error("接口报错", e);
+			return RespBuildUtil.error(ReturnCode.FAIL);
 		}
 	}
 

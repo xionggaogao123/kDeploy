@@ -6,7 +6,7 @@ package com.lk.kDeploy.exception;
  * @author: lk
  * @since: 2017年11月7日
  */
-public class ServiceException extends Exception {
+public class ServiceException extends RuntimeException {
 
 	/**
 	 * 
