@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.lk.kDeploy.base.vo.ProjectListVO;
 
@@ -15,6 +16,7 @@ import com.lk.kDeploy.base.vo.ProjectListVO;
  * @author: lk
  * @since: 2017年11月28日
  */
+@Service
 public class ProjectCommandService {
 
 	@Autowired
