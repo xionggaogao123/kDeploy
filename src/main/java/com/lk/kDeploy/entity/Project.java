@@ -12,6 +12,10 @@ import javax.persistence.Transient;
 @Table(name = "project")
 public class Project extends BaseEntity {
 
+	public static final int NONE_DEPLOYED = 0;
+	public static final int STATUS_STARTED = 1;
+	public static final int STATUS_STOPPED = 2;
+	
 	private String name; // 名称 使用git仓库中的项目名
 	private String description; // 描述
 	private String gitUrl; // 远程git仓库地址

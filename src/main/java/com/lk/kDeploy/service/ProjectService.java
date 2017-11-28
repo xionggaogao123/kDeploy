@@ -46,9 +46,4 @@ public class ProjectService {
 		projectMapper.deleteByPrimaryKey(id);
 	}
 	
-	public Integer getStatus(String id) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 }

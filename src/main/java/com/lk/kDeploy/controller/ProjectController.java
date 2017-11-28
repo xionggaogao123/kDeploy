@@ -20,6 +20,7 @@ import com.lk.kDeploy.base.dto.ResponseDTO;
 import com.lk.kDeploy.base.vo.ProjectListVO;
 import com.lk.kDeploy.constants.ReturnCode;
 import com.lk.kDeploy.entity.Project;
+import com.lk.kDeploy.service.ProjectCommandService;
 import com.lk.kDeploy.service.ProjectService;
 import com.lk.kDeploy.util.JsonUtils;
 import com.lk.kDeploy.util.RespBuildUtil;
@@ -39,6 +40,9 @@ public class ProjectController {
 	@Autowired
 	private ProjectService projectService;
 	
+	@Autowired
+	private ProjectCommandService projectCommandService;
+	
 	@PostMapping("/pageList")
 	public ResponseDTO pageList(@RequestBody RequestDTO reqDto) {
 		Integer page = reqDto.getPage();
@@ -53,7 +57,7 @@ public class ProjectController {
 		int total = projectService.count(name);
 		
 		List<ProjectListVO> resList = list.stream().map(ProjectListVO::new).collect(Collectors.toList());
-		resList.forEach((proVO) -> proVO.setStatus(projectService.getStatus(proVO.getId())));
+		projectCommandService.setStatus(resList);
 		
 		return RespBuildUtil.success(resList, page, pageSize, total);
 	}
@@ -69,7 +73,7 @@ public class ProjectController {
 			return RespBuildUtil.error(ReturnCode.OBJECT_NOT_FOUND);
 		}
 		
-		project.setStatus(projectService.getStatus(project.getId()));
+		project.setStatus(projectCommandService.getStatus(project.getId()));
 		return RespBuildUtil.success(project);
 	}
 	
