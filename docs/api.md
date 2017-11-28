@@ -202,6 +202,46 @@ Response:
 ${操作结果}
 ~~~
 
+#### 项目拉取最新代码 `/project/{id}/gitpull`
+{id}为项目id
+~~~js
+Response:
+${操作结果}
+~~~
+
+#### 项目切换分支 `/project/{id}/checkout`
+{id}为项目id
+~~~js
+Request:
+{
+	branch: "" // 分支名称
+}
+
+Response:
+${操作结果}
+~~~
+
+#### 部署项目 `/project/{id}/deploy`
+{id}为项目id
+~~~js
+Response:
+${操作结果}
+~~~
+
+#### 启动项目 `/project/{id}/startup`
+{id}为项目id
+~~~js
+Response:
+${操作结果}
+~~~
+
+#### 停止项目 `/project/{id}/shutdown`
+{id}为项目id
+~~~js
+Response:
+${操作结果}
+~~~
+
 ## Web Socket API
 
 * kDeploy系统的WebSocket连接地址为："`域名`:`WebSocket端口号`"
