@@ -22,6 +22,7 @@ import com.lk.kDeploy.base.dto.ResponseDTO;
 import com.lk.kDeploy.config.CommonConfig;
 import com.lk.kDeploy.constants.Constants;
 import com.lk.kDeploy.constants.ReturnCode;
+import com.lk.kDeploy.exception.ServiceException;
 import com.lk.kDeploy.util.RespBuildUtil;
 import com.lk.kDeploy.util.UUIDUtil;
 import com.lk.kDeploy.websocket.WebSocketClientPool;
@@ -49,7 +50,7 @@ public class UserController {
 		
 		String realPassword = commonConfig.getPassword();
 		if (!commonConfig.getUsername().equals(username) || !DigestUtils.sha512Hex(realPassword).equals(password)) {
-			return RespBuildUtil.error(ReturnCode.USERNAME_OR_PASSWORD_ERROR);
+			throw new ServiceException(ReturnCode.USERNAME_OR_PASSWORD_ERROR);
 		}
 		
 		request.getSession().setAttribute(Constants.SESSION_LOGIN_USER, username);
@@ -66,7 +67,7 @@ public class UserController {
 	public ResponseDTO getSession(HttpServletRequest request) {
 		Object username = request.getSession().getAttribute(Constants.SESSION_LOGIN_USER);
 		if (null == username) {
-			return RespBuildUtil.error(ReturnCode.SESSION_TIMEOUT);
+			throw new ServiceException(ReturnCode.SESSION_TIMEOUT);
 		}
 		
 		Map<String, Object> resMap = new HashMap<>();

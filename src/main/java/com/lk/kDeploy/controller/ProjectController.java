@@ -20,6 +20,7 @@ import com.lk.kDeploy.base.dto.ResponseDTO;
 import com.lk.kDeploy.base.vo.ProjectListVO;
 import com.lk.kDeploy.constants.ReturnCode;
 import com.lk.kDeploy.entity.Project;
+import com.lk.kDeploy.exception.ServiceException;
 import com.lk.kDeploy.service.ProjectCommandService;
 import com.lk.kDeploy.service.ProjectService;
 import com.lk.kDeploy.util.JsonUtils;
@@ -49,7 +50,7 @@ public class ProjectController {
 		Integer pageSize = reqDto.getPageSize();
 		if (null == page || null == pageSize) {
 			LOG.info("缺少分页参数");
-			return RespBuildUtil.error(ReturnCode.PAGE_PARAM_BLANK_ERROR);
+			throw new ServiceException(ReturnCode.PAGE_PARAM_BLANK_ERROR);
 		}
 		
 		String name = reqDto.getStringParam("name");
@@ -65,12 +66,12 @@ public class ProjectController {
 	@PostMapping("/{id}/get")
 	public ResponseDTO get(@PathVariable("id") String id) {
 		if (StringUtils.isBlank(id)) {
-			return RespBuildUtil.error(ReturnCode.REQUIRED_BLANK_ERROR);
+			throw new ServiceException(ReturnCode.REQUIRED_BLANK_ERROR);
 		}
 		
 		Project project = projectService.getById(id);
 		if (null == project) {
-			return RespBuildUtil.error(ReturnCode.OBJECT_NOT_FOUND);
+			throw new ServiceException(ReturnCode.OBJECT_NOT_FOUND);
 		}
 		
 		project.setStatus(projectCommandService.getStatus(project.getId()));
@@ -93,12 +94,12 @@ public class ProjectController {
 	@PostMapping("/{id}/update")
 	public ResponseDTO update(@RequestBody RequestDTO reqDto, @PathVariable("id") String id) {
 		if (StringUtils.isBlank(id)) {
-			return RespBuildUtil.error(ReturnCode.REQUIRED_BLANK_ERROR);
+			throw new ServiceException(ReturnCode.REQUIRED_BLANK_ERROR);
 		}
 		
 		Project project = projectService.getById(id);
 		if (null == project) {
-			return RespBuildUtil.error(ReturnCode.OBJECT_NOT_FOUND);
+			throw new ServiceException(ReturnCode.OBJECT_NOT_FOUND);
 		}
 		
 		if (reqDto.hasParam("name")) project.setName(reqDto.getStringParam("name"));
@@ -120,11 +121,26 @@ public class ProjectController {
 	@PostMapping("/{id}/delete")
 	public ResponseDTO delete(@PathVariable("id") String id) {
 		if (StringUtils.isBlank(id)) {
-			return RespBuildUtil.error(ReturnCode.REQUIRED_BLANK_ERROR);
+			throw new ServiceException(ReturnCode.REQUIRED_BLANK_ERROR);
 		}
 		
 		projectService.delete(id);
 		
+		return RespBuildUtil.success();
+	}
+	
+	@PostMapping("/{id}/deploy")
+	public ResponseDTO deploy(@PathVariable("id") String id) {
+		if (StringUtils.isBlank(id)) {
+			throw new ServiceException(ReturnCode.REQUIRED_BLANK_ERROR);
+		}
+		
+		Project project = projectService.getById(id);
+		if (null == project) {
+			throw new ServiceException(ReturnCode.OBJECT_NOT_FOUND);
+		}
+		
+		// TODO
 		return RespBuildUtil.success();
 	}
 	
