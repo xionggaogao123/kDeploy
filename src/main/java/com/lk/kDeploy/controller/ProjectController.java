@@ -21,7 +21,7 @@ import com.lk.kDeploy.base.vo.ProjectListVO;
 import com.lk.kDeploy.constants.ReturnCode;
 import com.lk.kDeploy.entity.Project;
 import com.lk.kDeploy.exception.ServiceException;
-import com.lk.kDeploy.service.ProjectCommandService;
+import com.lk.kDeploy.service.CommandService;
 import com.lk.kDeploy.service.ProjectService;
 import com.lk.kDeploy.util.JsonUtils;
 import com.lk.kDeploy.util.RespBuildUtil;
@@ -42,7 +42,7 @@ public class ProjectController {
 	private ProjectService projectService;
 	
 	@Autowired
-	private ProjectCommandService projectCommandService;
+	private CommandService projectCommandService;
 	
 	@PostMapping("/pageList")
 	public ResponseDTO pageList(@RequestBody RequestDTO reqDto) {
@@ -140,7 +140,7 @@ public class ProjectController {
 			throw new ServiceException(ReturnCode.OBJECT_NOT_FOUND);
 		}
 		
-		// TODO
+		projectService.deploy(project);
 		return RespBuildUtil.success();
 	}
 	

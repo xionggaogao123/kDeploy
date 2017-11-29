@@ -45,5 +45,10 @@ public class ProjectService {
 	public void delete(String id) {
 		projectMapper.deleteByPrimaryKey(id);
 	}
+
+	public void deploy(Project project) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
