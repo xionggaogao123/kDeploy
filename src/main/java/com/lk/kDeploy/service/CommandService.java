@@ -81,13 +81,13 @@ public class CommandService {
 		return null;
 	}
 	
-	private String execute(String command) {
+	public String execute(String command) {
 		long timeout = commonConfig.getCommandTimeout() * MILLISECONDS_PER_MINUTE;
 		String charset = commonConfig.getCommandSystemCharset();
 		return ExecutorUtil.exec(command, timeout, charset);
 	}
 	
-	private void executeAndPushLog(String username, String command) {
+	public void executeAndPushLog(String username, String command) {
 		long timeout = commonConfig.getCommandTimeout() * MILLISECONDS_PER_MINUTE;
 		String charset = commonConfig.getCommandSystemCharset();
 		

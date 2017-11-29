@@ -1,11 +1,17 @@
 package com.lk.kDeploy.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lk.kDeploy.constants.ReturnCode;
 import com.lk.kDeploy.entity.Project;
+import com.lk.kDeploy.exception.ServiceException;
 import com.lk.kDeploy.mapper.ProjectMapper;
 
 /**
@@ -47,8 +53,18 @@ public class ProjectService {
 	}
 
 	public void deploy(Project project) {
-		// TODO Auto-generated method stub
+		String name = project.getName();
+		String sourcePath = project.getProjectSourcePath();
 		
+		File projectPath = new File(sourcePath + name);
+
+		try {
+			FileUtils.forceMkdir(projectPath);
+		} catch (IOException e) {
+			throw new ServiceException(ReturnCode.EXECUTE_COMMAND_ERROR);
+		}
+		
+//		FilenameUtils.
 	}
 	
 }

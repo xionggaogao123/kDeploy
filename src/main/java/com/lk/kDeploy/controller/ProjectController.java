@@ -42,7 +42,7 @@ public class ProjectController {
 	private ProjectService projectService;
 	
 	@Autowired
-	private CommandService projectCommandService;
+	private CommandService commandService;
 	
 	@PostMapping("/pageList")
 	public ResponseDTO pageList(@RequestBody RequestDTO reqDto) {
@@ -58,7 +58,7 @@ public class ProjectController {
 		int total = projectService.count(name);
 		
 		List<ProjectListVO> resList = list.stream().map(ProjectListVO::new).collect(Collectors.toList());
-		projectCommandService.setStatus(resList);
+		commandService.setStatus(resList);
 		
 		return RespBuildUtil.success(resList, page, pageSize, total);
 	}
@@ -74,7 +74,7 @@ public class ProjectController {
 			throw new ServiceException(ReturnCode.OBJECT_NOT_FOUND);
 		}
 		
-		project.setStatus(projectCommandService.getStatus(project.getId()));
+		project.setStatus(commandService.getStatus(project.getId()));
 		return RespBuildUtil.success(project);
 	}
 	

@@ -46,4 +46,9 @@ public interface ReturnCode {
      * 命令执行错误
      */
     int EXECUTE_COMMAND_ERROR = 301;
+    /**
+     * 项目源码目录创建失败
+     */
+    int PROJECT_SOURCE_PATH_MAKE_ERROR = 302;
+    
 }
