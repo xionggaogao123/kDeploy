@@ -27,7 +27,7 @@ import com.lk.kDeploy.exception.ServiceException;
  * @since: 2017年11月28日
  */
 public class ExecutorUtil {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ExecutorUtil.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ExecutorUtil.class);
 
 	/**
 	 * 执行命令
@@ -37,7 +37,7 @@ public class ExecutorUtil {
 	 * @return 返回回显字符串
 	 */
 	public static String exec(String command, long timeout, String charset) {
-		LOGGER.info("执行命令。command： {}", command);
+		LOG.info("执行命令。command： {}", command);
 		
 		Executor executor = getDefaultExecutor(timeout);
 		
@@ -51,7 +51,7 @@ public class ExecutorUtil {
 			
 			return IOUtils.toString(pis, charset);
 		} catch (IOException e) {
-			LOGGER.error("执行命令报错", e);
+			LOG.error("执行命令报错", e);
 			throw new ServiceException(ReturnCode.EXECUTE_COMMAND_ERROR);
 		}
 	}
@@ -64,7 +64,7 @@ public class ExecutorUtil {
 	 * @param echoConsumer 处理一行回显的方法
 	 */
 	public static void exec(String command, long timeout, String charset, Consumer<String> echoConsumer) {
-		LOGGER.info("执行命令。command： {}", command);
+		LOG.info("执行命令。command： {}", command);
 		
 		Executor executor = getDefaultExecutor(timeout);
 		
@@ -86,7 +86,7 @@ public class ExecutorUtil {
 				echoConsumer.accept(line + "\n");
 			}
 		} catch (IOException e) {
-			LOGGER.error("执行命令报错", e);
+			LOG.error("执行命令报错", e);
 			throw new ServiceException(ReturnCode.EXECUTE_COMMAND_ERROR);
 		}
 		
@@ -94,7 +94,7 @@ public class ExecutorUtil {
         	// 休息一下让命令执行结束
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
-			LOGGER.error("不会发生", e);
+			LOG.error("不会发生", e);
 		}
 		
 //		LOG.info("--> Watchdog is watching ? " + watchdog.isWatching());
@@ -103,7 +103,7 @@ public class ExecutorUtil {
 //		LOG.info("--> exit value is : " + resultHandler.getExitValue());
 //		LOG.info("--> exception is : " + resultHandler.getException());
 		
-        LOGGER.info("执行命令结束。command： {}", command);
+        LOG.info("执行命令结束。command： {}", command);
 	}
 
 	private static Executor getDefaultExecutor(long timeout) {

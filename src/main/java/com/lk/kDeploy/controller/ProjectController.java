@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,7 @@ import com.lk.kDeploy.base.annotion.ValidateRequired;
 import com.lk.kDeploy.base.dto.RequestDTO;
 import com.lk.kDeploy.base.dto.ResponseDTO;
 import com.lk.kDeploy.base.vo.ProjectListVO;
+import com.lk.kDeploy.constants.Constants;
 import com.lk.kDeploy.constants.ReturnCode;
 import com.lk.kDeploy.entity.Project;
 import com.lk.kDeploy.exception.ServiceException;
@@ -65,19 +68,12 @@ public class ProjectController {
 	
 	@PostMapping("/{id}/get")
 	public ResponseDTO get(@PathVariable("id") String id) {
-		if (StringUtils.isBlank(id)) {
-			throw new ServiceException(ReturnCode.REQUIRED_BLANK_ERROR);
-		}
-		
-		Project project = projectService.getById(id);
-		if (null == project) {
-			throw new ServiceException(ReturnCode.OBJECT_NOT_FOUND);
-		}
+		Project project = getExistingProject(id);
 		
 		project.setStatus(commandService.getStatus(project.getId()));
 		return RespBuildUtil.success(project);
 	}
-	
+
 	@PostMapping("/add")
 	@ValidateRequired({"name", "gitUrl", "projectSourcePath", "projectDeployPath", "packageName", "deployWay"})
 	public ResponseDTO add(@RequestBody RequestDTO reqDto) {
@@ -93,14 +89,7 @@ public class ProjectController {
 	
 	@PostMapping("/{id}/update")
 	public ResponseDTO update(@RequestBody RequestDTO reqDto, @PathVariable("id") String id) {
-		if (StringUtils.isBlank(id)) {
-			throw new ServiceException(ReturnCode.REQUIRED_BLANK_ERROR);
-		}
-		
-		Project project = projectService.getById(id);
-		if (null == project) {
-			throw new ServiceException(ReturnCode.OBJECT_NOT_FOUND);
-		}
+		Project project = getExistingProject(id);
 		
 		if (reqDto.hasParam("name")) project.setName(reqDto.getStringParam("name"));
 		if (reqDto.hasParam("description")) project.setDescription(reqDto.getStringParam("description"));
@@ -129,8 +118,39 @@ public class ProjectController {
 		return RespBuildUtil.success();
 	}
 	
+	/**
+	 * 拉取项目
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/{id}/gitpull")
+	public ResponseDTO gitpull(@PathVariable("id") String id, HttpServletRequest request) {
+		Project project = getExistingProject(id);
+		
+		String username = (String) request.getSession().getAttribute(Constants.SESSION_LOGIN_USER);
+		
+		projectService.gitpull(project, username);
+		return RespBuildUtil.success();
+	}
+	
+	/**
+	 * 部署项目
+	 * @param id
+	 * @param request
+	 * @return
+	 */
 	@PostMapping("/{id}/deploy")
-	public ResponseDTO deploy(@PathVariable("id") String id) {
+	public ResponseDTO deploy(@PathVariable("id") String id, HttpServletRequest request) {
+		Project project = getExistingProject(id);
+		
+		String username = (String) request.getSession().getAttribute(Constants.SESSION_LOGIN_USER);
+		
+		projectService.deploy(project, username);
+		return RespBuildUtil.success();
+	}
+	
+	private Project getExistingProject(String id) {
 		if (StringUtils.isBlank(id)) {
 			throw new ServiceException(ReturnCode.REQUIRED_BLANK_ERROR);
 		}
@@ -139,9 +159,6 @@ public class ProjectController {
 		if (null == project) {
 			throw new ServiceException(ReturnCode.OBJECT_NOT_FOUND);
 		}
-		
-		projectService.deploy(project);
-		return RespBuildUtil.success();
+		return project;
 	}
-	
 }

@@ -16,7 +16,7 @@ import com.lk.kDeploy.websocket.WebSocketServer;
  */
 @Component
 public class ApplicationShutdown implements ApplicationListener<ContextClosedEvent> {
-	protected static Logger LOGGER = LoggerFactory.getLogger(ApplicationShutdown.class);
+	protected static Logger LOG = LoggerFactory.getLogger(ApplicationShutdown.class);
 
 	@Override
 	public void onApplicationEvent(ContextClosedEvent event) {

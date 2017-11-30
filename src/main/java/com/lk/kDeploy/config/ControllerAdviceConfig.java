@@ -15,11 +15,11 @@ import com.lk.kDeploy.util.RespBuildUtil;
 @ControllerAdvice
 public class ControllerAdviceConfig {
 
-	private final static Logger LOGGER = LoggerFactory.getLogger(ControllerAdviceConfig.class);
+	private final static Logger LOG = LoggerFactory.getLogger(ControllerAdviceConfig.class);
 
     @ExceptionHandler(Exception.class)
     public @ResponseBody ResponseDTO jsonErrorHandler(HttpServletRequest request, Exception e) {
-        LOGGER.error("有异常！请联系管理员", e);
+        LOG.error("有异常！请联系管理员", e);
         return RespBuildUtil.error(ReturnCode.FAIL);
     }
 }

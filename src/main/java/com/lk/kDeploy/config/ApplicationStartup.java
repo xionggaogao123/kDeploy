@@ -17,7 +17,7 @@ import com.lk.kDeploy.websocket.WebSocketServer;
  */
 @Component
 public class ApplicationStartup implements ApplicationListener<ContextRefreshedEvent> {
-	protected static Logger LOGGER = LoggerFactory.getLogger(ApplicationStartup.class);
+	protected static Logger LOG = LoggerFactory.getLogger(ApplicationStartup.class);
 
 	@Autowired
 	private CommonConfig commonConfig;

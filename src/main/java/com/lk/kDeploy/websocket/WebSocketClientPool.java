@@ -16,7 +16,7 @@ import com.corundumstudio.socketio.SocketIOClient;
  * @since: 2017年11月15日
  */
 public final class WebSocketClientPool {
-	private static Logger LOGGER = LoggerFactory.getLogger(WebSocketClientPool.class);
+	private static Logger LOG = LoggerFactory.getLogger(WebSocketClientPool.class);
 
 	private static final int TOKEN_TIME_OUT = 10; // 分钟
 	private static final int CLIENT_TIME_OUT = 50; // 分钟
@@ -50,7 +50,7 @@ public final class WebSocketClientPool {
 	 * @param username
 	 */
 	public static void preRegistration(String token, String username) {
-		LOGGER.info("预注册WebSocket Client。token: {}", token);
+		LOG.info("预注册WebSocket Client。token: {}", token);
 		
 		synchronized (PRE_REGISTRATION_TOKEN_MAP) {
 			PRE_REGISTRATION_TOKEN_MAP.put(token, username);
@@ -64,7 +64,7 @@ public final class WebSocketClientPool {
 	 * @param username
 	 */
 	public static void registration(String token, SocketIOClient client) {
-		LOGGER.info("注册WebSocket Client。token: {}", token);
+		LOG.info("注册WebSocket Client。token: {}", token);
 		
 		synchronized (USER_CLIENT_MAP) {
 			LocalDateTime now = LocalDateTime.now();
@@ -72,7 +72,7 @@ public final class WebSocketClientPool {
 			
 			String username = PRE_REGISTRATION_TOKEN_MAP.get(token);
 			if (null == username) {
-				LOGGER.info("token过期或没有预注册。token: {}", token);
+				LOG.info("token过期或没有预注册。token: {}", token);
 				return;
 			}
 			
@@ -86,7 +86,7 @@ public final class WebSocketClientPool {
 	 * @param username
 	 */
 	public static void unregistration(String username) {
-		LOGGER.info("注销client。username: {}", username);
+		LOG.info("注销client。username: {}", username);
 		
 		USER_CLIENT_MAP.remove(username);
 		USER_CLIENT_EXPIRE_TIME_MAP.remove(username);
