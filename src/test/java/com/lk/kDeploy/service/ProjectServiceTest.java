@@ -38,6 +38,7 @@ public class ProjectServiceTest {
 		String gitUtl = matcher.group(1);
 		System.out.println(gitUtl);
 		assertEquals("git@gitlab.com:kathous/datacenter.git", gitUtl);
+		
 	}
 
 }
