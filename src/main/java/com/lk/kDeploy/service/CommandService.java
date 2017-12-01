@@ -66,7 +66,7 @@ public class CommandService {
 			}
 			
 			String id = getProjectId(processStr);
-			if (id.length() == 36) {
+			if (StringUtils.isNotBlank(id) && id.length() == 36) {
 				set.add(id);
 			}
 		}
