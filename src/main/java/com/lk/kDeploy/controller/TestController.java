@@ -1,8 +1,14 @@
 package com.lk.kDeploy.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteWatchdog;
+import org.apache.commons.exec.PumpStreamHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +53,36 @@ public class TestController {
 		Map<String, Object> map = new HashMap<>();
 		map.put("log", res);
 		return RespBuildUtil.success(map);
+	}
+	
+	@PostMapping("/execute2")
+	public ResponseDTO execute2(@RequestBody RequestDTO req) throws ServiceException, IOException {
+		String command = req.getStringParam("command");
+		String res = exec(command);
+		LOG.info(res);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("log", res);
+		return RespBuildUtil.success(map);
+	}
+	public String exec(String cmd) throws IOException {
+		CommandLine cmdLine = CommandLine.parse(cmd);
+		
+		DefaultExecutor executor = new DefaultExecutor();
+		// 防止抛出异常
+		executor.setExitValues(null);
+
+		// 命令执行的超时时间
+		ExecuteWatchdog watchdog = new ExecuteWatchdog(60 * 1000);
+		executor.setWatchdog(watchdog);
+
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
+		executor.setStreamHandler(streamHandler);
+
+		executor.execute(cmdLine);
+		
+		return outputStream.toString();
 	}
 	
 }

@@ -22,6 +22,7 @@
     <input type="text" style="width: 460px;" name="command" value="">
     <button type="button" name="button" onclick="execute()">执行命令（推送回显）</button>
     <button type="button" name="button" onclick="execute2()">执行命令（接口返回回显）</button>
+    <button type="button" name="button" onclick="execute3()">执行命令（接口返回回显，未编码）</button>
     <hr>
     <div id="console">
       <p id="message"></p>
@@ -74,26 +75,27 @@
         })
       }
 
-      function execute() {
+      function getCommandParam() {
         let cmd = document.getElementsByName("command")[0].value
         let param = {
           params: {
             command: cmd
           }
         }
-        $api("api/test/executeAndPush", "post", param, (res) => {
+      }
+      function execute() {
+        $api("api/test/executeAndPush", "post", getCommandParam(), (res) => {
     	    setMessageInnerHTML("执行完毕\r\n\r\n")
         })
       }
-
       function execute2() {
-        let cmd = document.getElementsByName("command")[0].value
-        let param = {
-          params: {
-            command: cmd
-          }
-        }
-        $api("api/test/execute", "post", param, (res) => {
+        $api("api/test/execute", "post", getCommandParam(), (res) => {
+          setMessageInnerHTML(res.data.log)
+    	    setMessageInnerHTML("执行完毕\r\n\r\n")
+        })
+      }
+      function execute3() {
+        $api("api/test/execute2", "post", getCommandParam(), (res) => {
           setMessageInnerHTML(res.data.log)
     	    setMessageInnerHTML("执行完毕\r\n\r\n")
         })
