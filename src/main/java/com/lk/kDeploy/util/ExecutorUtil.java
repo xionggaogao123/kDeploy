@@ -43,7 +43,7 @@ public class ExecutorUtil {
 		
 		final CommandLine cmdLine = CommandLine.parse(command);
 
-		PipedOutputStream outputStream = new PipedOutputStream();
+		PipedOutputStream outputStream = new TempPipedOutputStream();
 		try (PipedInputStream pis = new PipedInputStream(outputStream)) {
 			
 			executor.setStreamHandler(new PumpStreamHandler(outputStream, outputStream));
@@ -58,7 +58,9 @@ public class ExecutorUtil {
 	}
 	
 	/**
-	 * 执行命令
+	 * 执行命令<br>
+	 * https://stackoverflow.com/questions/21100067/swedish-character-corrupted-when-running-from-command-line
+	 * 
 	 * @param command 命令
 	 * @param timeout 执行超时时间
 	 * @param charset 回显字符串编码
@@ -72,7 +74,7 @@ public class ExecutorUtil {
 		final DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
 		final CommandLine cmdLine = CommandLine.parse(command);
 		
-		PipedOutputStream outputStream = new PipedOutputStream();
+		PipedOutputStream outputStream = new TempPipedOutputStream();
 		try (PipedInputStream pis = new PipedInputStream(outputStream)) {
 			
 			executor.setStreamHandler(new PumpStreamHandler(outputStream, outputStream));
