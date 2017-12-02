@@ -43,6 +43,8 @@ kdeploy:
     # websocket监听端口号
     port: 8881
   command:
+    # 命令执行系统。linux, windows TODO
+    system: windows
     # 命令执行回显字符串的编码，与系统有关。linux一般是UTF-8，笔者在windows开发故使用GBK
     system-charset: GBK
     # 命令执行超时时间，单位：分
