@@ -49,6 +49,7 @@ public class ExecutorUtil {
 			executor.setStreamHandler(new PumpStreamHandler(outputStream, outputStream));
 			executor.execute(cmdLine);
 			
+			LOG.info("执行命令结束。command： {}", command);
 			return IOUtils.toString(pis, charset);
 		} catch (IOException e) {
 			LOG.error("执行命令报错", e);
@@ -83,6 +84,7 @@ public class ExecutorUtil {
 			
 			String line = null;
 			while ((line = br.readLine()) != null) {
+				LOG.debug("回显：{}", line);
 				echoConsumer.accept(line + "\n");
 			}
 		} catch (IOException e) {

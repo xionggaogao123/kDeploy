@@ -136,6 +136,7 @@ public class ProjectService {
 		
 		if (force) {
 			try {
+				LOG.info("清空源码目录中的文件。projectDir: {}", projectDir.getAbsolutePath());
 				FileUtils.cleanDirectory(projectDir);
 			} catch (IOException e) {
 				LOG.info("清空目录报错。dir: {}", projectDir.getPath());
