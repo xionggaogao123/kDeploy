@@ -20,9 +20,8 @@
     <button type="button" name="button" onclick="logout()">登出</button>
     <span>|</span>
     <input type="text" style="width: 460px;" name="command" value="">
-    <button type="button" name="button" onclick="execute()">执行命令（推送回显）</button>
-    <button type="button" name="button" onclick="execute2()">执行命令（接口返回回显）</button>
-    <button type="button" name="button" onclick="execute3()">执行命令（接口返回回显，未编码）</button>
+    <button type="button" name="button" onclick="execute()">执行命令（推送）</button>
+    <button type="button" name="button" onclick="execute2()">执行命令（接口返回）</button>
     <hr>
     <div id="console">
       <p id="message"></p>
@@ -90,12 +89,6 @@
       }
       function execute2() {
         $api("api/test/execute", "post", getCommandParam(), (res) => {
-          setMessageInnerHTML(res.data.log)
-    	    setMessageInnerHTML("执行完毕\r\n\r\n")
-        })
-      }
-      function execute3() {
-        $api("api/test/execute2", "post", getCommandParam(), (res) => {
           setMessageInnerHTML(res.data.log)
     	    setMessageInnerHTML("执行完毕\r\n\r\n")
         })

@@ -1,6 +1,7 @@
 package com.lk.kDeploy.util;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PipedInputStream;
@@ -13,7 +14,6 @@ import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.Executor;
 import org.apache.commons.exec.PumpStreamHandler;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,29 +37,31 @@ public class ExecutorUtil {
 	 * @return 返回回显字符串
 	 */
 	public static String exec(String command, long timeout, String charset) {
-		LOG.info("执行命令。command： {}", command);
+		LOG.info("执行命令。command: {}", command);
 		
 		Executor executor = getDefaultExecutor(timeout);
 		
 		final CommandLine cmdLine = CommandLine.parse(command);
 
-		PipedOutputStream outputStream = new TempPipedOutputStream();
-		try (PipedInputStream pis = new PipedInputStream(outputStream)) {
-			
-			executor.setStreamHandler(new PumpStreamHandler(outputStream, outputStream));
+		try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+			PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
+			executor.setStreamHandler(streamHandler);
+	
 			executor.execute(cmdLine);
-			
-			LOG.info("执行命令结束。command： {}", command);
-			return IOUtils.toString(pis, charset);
+			return outputStream.toString(charset);
 		} catch (IOException e) {
-			LOG.error("执行命令报错", e);
+			LOG.info("命令执行失败", e);
 			throw new ServiceException(ReturnCode.EXECUTE_COMMAND_ERROR);
 		}
 	}
 	
 	/**
 	 * 执行命令<br>
-	 * https://stackoverflow.com/questions/21100067/swedish-character-corrupted-when-running-from-command-line
+	 * 参考资料:
+	 * <ul>
+	 * 	<li>https://stackoverflow.com/questions/21100067/swedish-character-corrupted-when-running-from-command-line</li>
+	 * 	<li>https://segmentfault.com/q/1010000004289993</li>
+	 * </ul>
 	 * 
 	 * @param command 命令
 	 * @param timeout 执行超时时间
@@ -67,27 +69,30 @@ public class ExecutorUtil {
 	 * @param echoConsumer 处理一行回显的方法
 	 */
 	public static void exec(String command, long timeout, String charset, Consumer<String> echoConsumer) {
-		LOG.info("执行命令。command： {}", command);
+		LOG.info("执行命令。command: {}", command);
 		
 		Executor executor = getDefaultExecutor(timeout);
 		
 		final DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
 		final CommandLine cmdLine = CommandLine.parse(command);
 		
-		PipedOutputStream outputStream = new TempPipedOutputStream();
-		try (PipedInputStream pis = new PipedInputStream(outputStream)) {
-			
-			executor.setStreamHandler(new PumpStreamHandler(outputStream, outputStream));
-			
-			InputStreamReader inStreamReader = new InputStreamReader(pis, charset);
-			BufferedReader br = new BufferedReader(inStreamReader);
-			
-			executor.execute(cmdLine, resultHandler);
-			
-			String line = null;
-			while ((line = br.readLine()) != null) {
-				LOG.debug("回显：{}", line);
-				echoConsumer.accept(line + "\n");
+		try (PipedOutputStream outputStream = new TempPipedOutputStream()) {
+			try (PipedInputStream pis = new PipedInputStream(outputStream, 2048)) {
+				
+				executor.setStreamHandler(new PumpStreamHandler(outputStream, outputStream));
+				
+				InputStreamReader inStreamReader = new InputStreamReader(pis, charset);
+				BufferedReader br = new BufferedReader(inStreamReader);
+				
+				executor.execute(cmdLine, resultHandler);
+				
+				String line = null;
+				while ((line = br.readLine()) != null) {
+					LOG.debug("回显: {}", line);
+					echoConsumer.accept(line + "\n");
+				}
+			} catch (IOException e) {
+				throw new ServiceException(ReturnCode.EXECUTE_COMMAND_ERROR);
 			}
 		} catch (IOException e) {
 			LOG.error("执行命令报错", e);
@@ -107,7 +112,7 @@ public class ExecutorUtil {
 //		LOG.info("--> exit value is : " + resultHandler.getExitValue());
 //		LOG.info("--> exception is : " + resultHandler.getException());
 		
-        LOG.info("执行命令结束。command： {}", command);
+        LOG.info("执行命令结束。command: {}", command);
 	}
 
 	private static Executor getDefaultExecutor(long timeout) {
