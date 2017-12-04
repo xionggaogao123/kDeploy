@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import com.lk.kDeploy.util.UUIDUtil;
 
-public class CommandServiceTest {
+public class LinuxProjectCommandServiceImplTest {
 
 	@Test
 	public void test() {
