@@ -54,11 +54,11 @@ if [[ "$option" = "git-clone" ]]; then
   git clone $gitUrl
 
 elif [[ "$option" = "git-pull" ]]; then
-  echo "拉取最新代码 ${name} ...\n"
+  echo -e "拉取最新代码 ${name} ...\n"
   #TODO
 
 elif [[ "$option" = "git-checkout" ]]; then
-  echo "切换分支 ${name} ...\n"
+  echo -e "切换分支 ${name} ...\n"
   #TODO
 
 fi
