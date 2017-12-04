@@ -32,7 +32,7 @@ public class ExecutorUtil {
 	/**
 	 * 执行命令
 	 * @param command 命令
-	 * @param timeout 执行超时时间
+	 * @param timeout 执行超时时间 milliseconds
 	 * @param charset 回显字符串编码
 	 * @return 返回回显字符串
 	 */
@@ -64,7 +64,7 @@ public class ExecutorUtil {
 	 * </ul>
 	 * 
 	 * @param command 命令
-	 * @param timeout 执行超时时间
+	 * @param timeout 执行超时时间 milliseconds
 	 * @param charset 回显字符串编码
 	 * @param echoConsumer 处理一行回显的方法
 	 */
@@ -76,7 +76,7 @@ public class ExecutorUtil {
 		final DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
 		final CommandLine cmdLine = CommandLine.parse(command);
 		
-		try (PipedOutputStream outputStream = new TempPipedOutputStream()) {
+		try (PipedOutputStream outputStream = new PipedOutputStream()) {
 			try (PipedInputStream pis = new PipedInputStream(outputStream, 2048)) {
 				
 				executor.setStreamHandler(new PumpStreamHandler(outputStream, outputStream));
@@ -92,7 +92,7 @@ public class ExecutorUtil {
 					echoConsumer.accept(line + "\n");
 				}
 			} catch (IOException e) {
-				throw new ServiceException(ReturnCode.EXECUTE_COMMAND_ERROR);
+				throw e;
 			}
 		} catch (IOException e) {
 			LOG.error("执行命令报错", e);

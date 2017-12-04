@@ -24,7 +24,7 @@ import com.lk.kDeploy.constants.Constants;
 import com.lk.kDeploy.constants.ReturnCode;
 import com.lk.kDeploy.entity.Project;
 import com.lk.kDeploy.exception.ServiceException;
-import com.lk.kDeploy.service.CommandService;
+import com.lk.kDeploy.service.ProjectCommandService;
 import com.lk.kDeploy.service.ProjectService;
 import com.lk.kDeploy.util.JsonUtils;
 import com.lk.kDeploy.util.RespBuildUtil;
@@ -45,7 +45,7 @@ public class ProjectController {
 	private ProjectService projectService;
 	
 	@Autowired
-	private CommandService commandService;
+	private ProjectCommandService commandService;
 	
 	@PostMapping("/pageList")
 	public ResponseDTO pageList(@RequestBody RequestDTO reqDto) {
@@ -130,7 +130,7 @@ public class ProjectController {
 		
 		String username = (String) request.getSession().getAttribute(Constants.SESSION_LOGIN_USER);
 		
-		projectService.gitpull(project, username);
+		commandService.gitpull(project, username);
 		return RespBuildUtil.success();
 	}
 	
@@ -146,7 +146,7 @@ public class ProjectController {
 		
 		String username = (String) request.getSession().getAttribute(Constants.SESSION_LOGIN_USER);
 		
-		projectService.deploy(project, username);
+		commandService.deploy(project, username);
 		return RespBuildUtil.success();
 	}
 	

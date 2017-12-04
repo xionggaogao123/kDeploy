@@ -1,22 +1,30 @@
 package com.lk.kDeploy;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.nio.charset.Charset;
+import java.util.function.Consumer;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecuteResultHandler;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.ExecuteWatchdog;
+import org.apache.commons.exec.Executor;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.lk.kDeploy.constants.ReturnCode;
+import com.lk.kDeploy.exception.ServiceException;
+import com.lk.kDeploy.util.ExecutorUtil;
 
 public class ApacheExecTest {
 	protected static Logger LOG = LoggerFactory.getLogger(ApacheExecTest.class);
@@ -166,62 +174,70 @@ public class ApacheExecTest {
 	}
 	
 	/**
-	 * 中文问题
+	 * 输入
 	 * @throws ExecuteException
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void testCmd7() throws ExecuteException, IOException, InterruptedException {
-		String cmdStr = "ping www.baidu.com";
-//		String cmdStr = "cmd /c echo 你好世界";
+	public void testCmdInput() throws ExecuteException, IOException, InterruptedException {
+		exec("C:/Program Files/MySQL/MySQL Server 5.7/bin/mysql.exe -u root -p", 60000, "GBK", System.out::println);
+	}
+	public void exec(String command, long timeout, String charset, Consumer<String> echoConsumer) {
+		LOG.info("执行命令。command: {}", command);
 		
-		final ExecuteWatchdog watchdog = new ExecuteWatchdog(Integer.MAX_VALUE);
+		Executor executor = getDefaultExecutor(timeout);
+		
 		final DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
-		final CommandLine cmdLine = CommandLine.parse(cmdStr);
+		final CommandLine cmdLine = CommandLine.parse(command);
 		
-		DefaultExecutor executor = new DefaultExecutor();
+		try (PipedOutputStream outputStream = new PipedOutputStream()) {
+			try (PipedInputStream pis = new PipedInputStream(outputStream, 2048)) {
+				
+				
+				String input = "111222\r\n";
+				executor.setStreamHandler(new PumpStreamHandler(outputStream, outputStream, new ByteArrayInputStream(input .getBytes())));
+				
+				InputStreamReader inStreamReader = new InputStreamReader(pis, charset);
+				BufferedReader br = new BufferedReader(inStreamReader);
+				
+				executor.execute(cmdLine, resultHandler);
+				
+				String line = null;
+				while ((line = br.readLine()) != null) {
+					LOG.debug("回显: {}", line);
+					echoConsumer.accept(line + "\n");
+				}
+			} catch (IOException e) {
+				throw e;
+			}
+		} catch (IOException e) {
+			LOG.error("执行命令报错", e);
+			throw new ServiceException(ReturnCode.EXECUTE_COMMAND_ERROR);
+		}
+		
+        try {
+        	// 休息一下让命令执行结束
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			LOG.error("不会发生", e);
+		}
+		
+//		LOG.info("--> Watchdog is watching ? " + watchdog.isWatching());
+//		LOG.info("--> Watchdog should have killed the process : " + watchdog.killedProcess());
+//		LOG.info("--> wait result is : " + resultHandler.hasResult());
+//		LOG.info("--> exit value is : " + resultHandler.getExitValue());
+//		LOG.info("--> exception is : " + resultHandler.getException());
+		
+        LOG.info("执行命令结束。command: {}", command);
+	}
+	private static Executor getDefaultExecutor(long timeout) {
+		Executor executor = new DefaultExecutor();
+		
+		ExecuteWatchdog watchdog = new ExecuteWatchdog(timeout);
 		executor.setWatchdog(watchdog);
 		executor.setExitValues(null);
-		
-		PipedOutputStream outputStream = new PipedOutputStream();
-        PipedInputStream pis = new PipedInputStream(outputStream);
-		
-		executor.setStreamHandler(new PumpStreamHandler(outputStream, outputStream));
-		
-		Charset encoding = getEncoding();
-		LOG.info("系统编码", encoding.toString());
-		
-		InputStreamReader inStreamReader = new InputStreamReader(pis, "GBK");
-		BufferedReader br = new BufferedReader(inStreamReader);
-        
-        LOG.info("start...");
-		executor.execute(cmdLine, resultHandler);
-        
-        String line = null;
-        while((line = br.readLine()) != null) {
-//            sb.append(line+"\n");
-        	LOG.info(line);
-        }
-        pis.close();
-		
-//		while (!resultHandler.hasResult()) {
-//			Thread.sleep(500);
-//		}
-        
-        Thread.sleep(500);
-        
-		LOG.info("--> Watchdog is watching ? " + watchdog.isWatching());
-		LOG.info("--> Watchdog should have killed the process : " + watchdog.killedProcess());
-		LOG.info("--> wait result is : " + resultHandler.hasResult());
-		LOG.info("--> exit value is : " + resultHandler.getExitValue());
-		LOG.info("--> exception is : " + resultHandler.getException());
-		
-		LOG.info("end");
-	}
-
-	private Charset getEncoding() {
-		return Charset.defaultCharset();
+		return executor;
 	}
 	
 }
