@@ -33,6 +33,12 @@ indexOf() {
   done
   return 255
 }
+checkSourcePathExists() {
+  if [[ ! -d "${projectSourcePath}" ]]; then
+    echo -e "\n目录不存在: ${projectSourcePath}"
+    exit 1
+  fi
+}
 
 ##
 option=$1
@@ -45,20 +51,37 @@ fi
 if [[ "$option" = "git-clone" ]]; then
   echo "克隆项目 ${name} ...\n"
 
-  if [[ ! -d "${projectSourcePath}" ]]; then
-    echo -e "\n目录不存在: ${projectSourcePath}"
-    exit 1
-  fi
+  checkSourcePathExists
 
   cd ${projectSourcePath}
   git clone $gitUrl
 
 elif [[ "$option" = "git-pull" ]]; then
   echo -e "拉取最新代码 ${name} ...\n"
-  #TODO
+
+  checkSourcePathExists
+
+  cd ${projectSourcePath}
+  git pull
 
 elif [[ "$option" = "git-checkout" ]]; then
   echo -e "切换分支 ${name} ...\n"
-  #TODO
+
+  checkSourcePathExists
+
+  cd ${projectSourcePath}
+  if [[ ! -n "$branch" ]]; then
+    git checkout master
+  else
+    git checkout $branch
+  fi
+
+elif [[ "$option" = "git-branchAll" ]]; then
+  echo -e "获取branch信息 ${name} ...\n"
+
+  checkSourcePathExists
+
+  cd ${projectSourcePath}
+  git branch
 
 fi
