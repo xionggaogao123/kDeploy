@@ -12,4 +12,6 @@ public interface Constants {
 	
 	String SOCKET_EVENT_REGIST = "regist";
 	String SOCKET_EVENT_COMMAND_ECHO = "commandEcho";
+
+	String SHELL_PATH = "shell/";
 }

@@ -2,6 +2,7 @@ package com.lk.kDeploy.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,9 +14,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import com.lk.kDeploy.base.vo.ProjectListVO;
+import com.lk.kDeploy.constants.Constants;
 import com.lk.kDeploy.constants.ReturnCode;
 import com.lk.kDeploy.entity.Project;
 import com.lk.kDeploy.exception.ServiceException;
@@ -30,14 +33,34 @@ import com.lk.kDeploy.exception.ServiceException;
 @Service
 public class LinuxProjectCommandServiceImpl implements ProjectCommandService {
 	protected static final Logger LOG = LoggerFactory.getLogger(LinuxProjectCommandServiceImpl.class);
+	
+	@Autowired
+	private ProjectService projectService;
 
 	@Autowired
 	private CommandService commandService;
 	
 	@Override
-	public void initialize(String id) {
-		// TODO Auto-generated method stub
-		
+	public void initialize(Project project) {
+		try {
+			File shell = new ClassPathResource("shellTemp/project.sh").getFile();
+			String shellStr = FileUtils.readFileToString(shell, "utf-8");
+			
+			shellStr.replace("{{id}}", project.getId());
+			shellStr.replace("{{name}}", project.getName());
+			shellStr.replace("{{gitUrl}}", project.getGitUrl());
+			shellStr.replace("{{branch}}", project.getBranch());
+			shellStr.replace("{{projectSourcePath}}", project.getProjectSourcePath());
+			shellStr.replace("{{projectDeployPath}}", project.getProjectDeployPath());
+			shellStr.replace("{{packageName}}", project.getPackageName());
+			shellStr.replace("{{deploySubModule}}", project.getDeploySubModule());
+			
+			String fileName = project.getName() + ".sh";
+			FileUtils.writeStringToFile(new File(Constants.SHELL_PATH + fileName), shellStr, "utf-8");
+		} catch (IOException e) {
+			LOG.error("初始化项目shell文件失败", e);
+			throw new ServiceException(ReturnCode.PROJECT_SOURCE_PATH_MAKE_ERROR);
+		}
 	}
 	
 	@Override

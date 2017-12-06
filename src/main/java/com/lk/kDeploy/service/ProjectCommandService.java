@@ -9,9 +9,9 @@ public interface ProjectCommandService {
 	
 	/**
 	 * 初始化项目命令
-	 * @param id
+	 * @param project
 	 */
-	void initialize(String id);
+	void initialize(Project poroject);
 
 	/**
 	 * 通过项目id获取项目状态

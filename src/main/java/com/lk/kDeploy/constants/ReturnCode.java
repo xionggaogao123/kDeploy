@@ -50,5 +50,9 @@ public interface ReturnCode {
      * 项目源码目录创建失败
      */
     int PROJECT_SOURCE_PATH_MAKE_ERROR = 302;
+    /**
+     * 项目创建shell文件失败
+     */
+    int PROJECT_CREATE_SHELL_ERROR = 303;
     
 }
