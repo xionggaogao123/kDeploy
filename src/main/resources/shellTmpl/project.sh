@@ -1,8 +1,16 @@
 #!/bin/bash
 
-usage="使用方式：sh xxx.sh [option]\noption:\n\tgit-clone: 从git仓库克隆代码\n\tgit-pull: 从git仓库拉取代码\n\tgit-checkout: 切换分支，可带分支名称"
+usage="使用方式：sh xxx.sh [option]\n
+  option:\n
+  \tgit-clone: 从git仓库克隆代码\n
+  \tgit-pull: 从git仓库拉取代码\n
+  \tgit-checkout: 切换分支，可带分支名称\n
+  \tgit-branch: 获取分支信息\n
+  \tgit-deploy: 部署项目\n
+  \tgit-start: 启动项目\n
+  \tgit-stop: 停止项目\n"
 
-options=("git-clone"  "git-pull"  "git-checkout")
+options=("git-clone"  "git-pull"  "git-checkout"  "git-branch"  "git-deploy"  "git-start"  "git-stop")
 
 # 项目参数
 id={{id}}
@@ -76,12 +84,21 @@ elif [[ "$option" = "git-checkout" ]]; then
     git checkout $branch
   fi
 
-elif [[ "$option" = "git-branchAll" ]]; then
+elif [[ "$option" = "git-branch" ]]; then
   echo -e "获取branch信息 ${name} ...\n"
 
   checkSourcePathExists
 
   cd ${projectSourcePath}
   git branch
+
+elif [[ "$option" = "git-deploy" ]]; then
+  echo -e "部署项目 ${name} ...\n"
+
+elif [[ "$option" = "git-start" ]]; then
+  echo -e "启动项目 ${name} ...\n"
+
+elif [[ "$option" = "git-stop" ]]; then
+  echo -e "停止项目 ${name} ...\n"
 
 fi

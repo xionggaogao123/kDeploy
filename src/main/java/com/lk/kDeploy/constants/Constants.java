@@ -13,5 +13,6 @@ public interface Constants {
 	String SOCKET_EVENT_REGIST = "regist";
 	String SOCKET_EVENT_COMMAND_ECHO = "commandEcho";
 
-	String SHELL_PATH = "shell/";
+	String SHELL_TMPL_PROJECT_FILE = "shellTmpl/project.sh";
+	String SHELL_PATH_DIR = "shell/";
 }

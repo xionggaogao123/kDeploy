@@ -41,7 +41,7 @@ public class LinuxProjectCommandServiceImpl implements ProjectCommandService {
 	public void initialize(Project project) {
 		LOG.info("初始化shell文件。projectName: {}", project.getName());
 		try {
-			File shellTmpl = new ClassPathResource("shellTemp/project.sh").getFile();
+			File shellTmpl = new ClassPathResource(Constants.SHELL_TMPL_PROJECT_FILE).getFile();
 			String shellStr = FileUtils.readFileToString(shellTmpl, "utf-8");
 			
 			shellStr.replace("{{id}}", project.getId());
@@ -200,7 +200,7 @@ public class LinuxProjectCommandServiceImpl implements ProjectCommandService {
 	 */
 	private File getShellFile(String projectName) {
 		String fileName = projectName + ".sh";
-		return new File(Constants.SHELL_PATH + fileName);
+		return new File(Constants.SHELL_PATH_DIR + fileName);
 	}
 	
 	/**
