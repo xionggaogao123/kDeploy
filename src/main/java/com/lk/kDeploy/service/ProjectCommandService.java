@@ -11,7 +11,13 @@ public interface ProjectCommandService {
 	 * 初始化项目命令
 	 * @param project
 	 */
-	void initialize(Project poroject);
+	void initialize(Project project);
+	
+	/**
+	 * 
+	 * @param project
+	 */
+	void uninitialize(Project project);
 
 	/**
 	 * 通过项目id获取项目状态

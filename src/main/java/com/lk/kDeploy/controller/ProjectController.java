@@ -45,7 +45,7 @@ public class ProjectController {
 	private ProjectService projectService;
 	
 	@Autowired
-	private ProjectCommandService commandService;
+	private ProjectCommandService projectCommandService;
 	
 	@PostMapping("/pageList")
 	public ResponseDTO pageList(@RequestBody RequestDTO reqDto) {
@@ -61,7 +61,7 @@ public class ProjectController {
 		int total = projectService.count(name);
 		
 		List<ProjectListVO> resList = list.stream().map(ProjectListVO::new).collect(Collectors.toList());
-		commandService.setStatus(resList);
+		projectCommandService.setStatus(resList);
 		
 		return RespBuildUtil.success(resList, page, pageSize, total);
 	}
@@ -70,7 +70,7 @@ public class ProjectController {
 	public ResponseDTO get(@PathVariable("id") String id) {
 		Project project = getExistingProject(id);
 		
-		project.setStatus(commandService.getStatus(project.getId()));
+		project.setStatus(projectCommandService.getStatus(project.getId()));
 		return RespBuildUtil.success(project);
 	}
 
@@ -84,6 +84,7 @@ public class ProjectController {
 		project.setCreateAt(LocalDateTime.now());
 		projectService.save(project);
 		
+		projectCommandService.initialize(project);
 		return RespBuildUtil.success();
 	}
 	
@@ -104,6 +105,7 @@ public class ProjectController {
 		if (reqDto.hasParam("webContainerId")) project.setWebContainerId(reqDto.getStringParam("webContainerId"));
 		projectService.update(project);
 		
+		projectCommandService.initialize(project);
 		return RespBuildUtil.success();
 	}
 	
@@ -113,8 +115,9 @@ public class ProjectController {
 			throw new ServiceException(ReturnCode.REQUIRED_BLANK_ERROR);
 		}
 		
+		Project project = projectService.getById(id);
 		projectService.delete(id);
-		
+		projectCommandService.uninitialize(project);
 		return RespBuildUtil.success();
 	}
 	
@@ -130,7 +133,7 @@ public class ProjectController {
 		
 		String username = (String) request.getSession().getAttribute(Constants.SESSION_LOGIN_USER);
 		
-		commandService.gitpull(project, username);
+		projectCommandService.gitpull(project, username);
 		return RespBuildUtil.success();
 	}
 	
@@ -146,7 +149,7 @@ public class ProjectController {
 		
 		String username = (String) request.getSession().getAttribute(Constants.SESSION_LOGIN_USER);
 		
-		commandService.deploy(project, username);
+		projectCommandService.deploy(project, username);
 		return RespBuildUtil.success();
 	}
 	
