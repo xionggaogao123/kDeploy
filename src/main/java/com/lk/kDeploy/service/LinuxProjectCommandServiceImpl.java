@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import com.lk.kDeploy.base.vo.ProjectListVO;
 import com.lk.kDeploy.constants.Constants;
@@ -41,7 +42,9 @@ public class LinuxProjectCommandServiceImpl implements ProjectCommandService {
 	public void initialize(Project project) {
 		LOG.info("初始化shell文件。projectName: {}", project.getName());
 		try {
-			File shellTmpl = new ClassPathResource(Constants.SHELL_TMPL_PROJECT_FILE).getFile();
+//			InputStream stream = getClass().getClassLoader().getResourceAsStream("static/xxx.pdf");
+			
+			File shellTmpl = ResourceUtils.getFile("classpath:" + Constants.SHELL_TMPL_PROJECT_FILE);
 			String shellStr = FileUtils.readFileToString(shellTmpl, "utf-8");
 			
 			shellStr.replace("{{id}}", project.getId());
