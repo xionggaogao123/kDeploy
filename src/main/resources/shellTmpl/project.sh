@@ -61,7 +61,7 @@ elif [[ "$option" = "git-pull" ]]; then
 
   checkSourcePathExists
 
-  cd ${projectSourcePath}
+  cd ${projectSourceDir}
   git pull
 
 elif [[ "$option" = "git-checkout" ]]; then
@@ -69,7 +69,7 @@ elif [[ "$option" = "git-checkout" ]]; then
 
   checkSourcePathExists
 
-  cd ${projectSourcePath}
+  cd ${projectSourceDir}
   if [[ ! -n "$branch" ]]; then
     git checkout master
   else
@@ -81,7 +81,7 @@ elif [[ "$option" = "git-branch" ]]; then
 
   checkSourcePathExists
 
-  cd ${projectSourcePath}
+  cd ${projectSourceDir}
   git branch
 
 elif [[ "$option" = "git-deploy" ]]; then
