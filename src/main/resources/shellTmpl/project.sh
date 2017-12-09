@@ -5,14 +5,14 @@ usage="使用方式：sh xxx.sh [option]\noption:\n\tgit-clone: 从git仓库克�
 options=("git-clone"  "git-pull"  "git-checkout"  "git-branch"  "git-deploy"  "git-start"  "git-stop")
 
 # 项目参数
-id={{id}}
-name={{name}}
-gitUrl={{gitUrl}}
-branch={{branch}}
-projectSourcePath={{projectSourcePath}}
-projectDeployPath={{projectDeployPath}}
-packageName={{packageName}}
-deploySubModule={{deploySubModule}}
+id="{{id}}"
+name="{{name}}"
+gitUrl="{{gitUrl}}"
+branch="{{branch}}"
+projectSourcePath="{{projectSourcePath}}"
+projectDeployPath="{{projectDeployPath}}"
+packageName="{{packageName}}"
+deploySubModule="{{deploySubModule}}"
 
 projectSourceDir=${projectSourcePath}${name}
 projectDeployDir=${projectDeployPath}${name}
