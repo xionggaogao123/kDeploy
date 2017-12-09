@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +57,8 @@ public class LinuxProjectCommandServiceImpl implements ProjectCommandService {
 			shellStr = shellStr.replace("{{projectDeployPath}}", project.getProjectDeployPath());
 			shellStr = shellStr.replace("{{packageName}}", project.getPackageName());
 			shellStr = shellStr.replace("{{deploySubModule}}", null == project.getDeploySubModule() ? "" : project.getDeploySubModule());
+			
+			shellStr = shellStr.replaceAll("\\\\r\\\\n", "\n"); // 替换掉windows的换行符
 			
 			File shell = getShellFile(project.getName());
 			if (shell.exists()) {

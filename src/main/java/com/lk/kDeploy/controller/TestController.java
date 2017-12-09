@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,6 +71,9 @@ public class TestController {
 		shellStr = shellStr.replace("{{projectDeployPath}}", "/home/dev/kdeployApplDir/");
 		shellStr = shellStr.replace("{{packageName}}", "sprintStart-0.0.1-SNAPSHOT.jar");
 		shellStr = shellStr.replace("{{deploySubModule}}", "");
+		
+		shellStr = shellStr.replaceAll("\\\\r\\\\n", "\n");
+		FileUtils.writeStringToFile(new File("abc.sh"), shellStr, "utf-8");
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("shellStr", shellStr);
