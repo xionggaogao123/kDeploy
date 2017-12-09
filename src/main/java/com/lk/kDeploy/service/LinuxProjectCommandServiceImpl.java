@@ -11,7 +11,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,15 +67,30 @@ public class LinuxProjectCommandServiceImpl implements ProjectCommandService {
 			FileUtils.writeStringToFile(shell, shellStr, "utf-8");
 		} catch (IOException e) {
 			LOG.error("初始化项目shell文件失败", e);
-			throw new ServiceException(ReturnCode.PROJECT_SOURCE_PATH_MAKE_ERROR);
+			throw new ServiceException(ReturnCode.PROJECT_CREATE_SHELL_ERROR);
 		}
 	}
 
 	@Override
 	public void uninitialize(Project project) {
-		File shell = getShellFile(project.getName());
+		String name = project.getName();
+		
+		File shell = getShellFile(name);
 		LOG.info("删除旧shell文件。file: {}", shell.getAbsolutePath());
 		FileUtils.deleteQuietly(shell);
+		
+		String projectSourceDir = project.getProjectSourcePath() + name;
+		String projectDeployDir = project.getProjectDeployPath() + name;
+		try {
+			FileUtils.deleteDirectory(new File(projectSourceDir));
+		} catch (IOException e) {
+			LOG.error("删除源码文件夹失败, projectName: {}", name, e);
+		}
+		try {
+			FileUtils.deleteDirectory(new File(projectDeployDir));
+		} catch (IOException e) {
+			LOG.error("删除部署文件夹失败, projectName: {}", name, e);
+		}
 	}
 
 	@Override
@@ -104,9 +118,8 @@ public class LinuxProjectCommandServiceImpl implements ProjectCommandService {
 	public void gitpull(Project project, String username) {
 		String name = project.getName();
 		String sourcePath = project.getProjectSourcePath();
-		String projectPath = sourcePath + name;
 		
-		File projectDir = new File(projectPath);
+		File projectDir = new File(sourcePath + name);
 		if (!projectDir.exists()) {
 			LOG.info("项目源码不存在，克隆源码。projectName: {}", name);
 			gitClone(project, username, false);
@@ -142,15 +155,39 @@ public class LinuxProjectCommandServiceImpl implements ProjectCommandService {
 		
 		execProjOpsAndPush(username, project, ProjectOperationConst.GIT_PULL);
 	}
+	
+	@Override
+	public void checkout(Project project, String username) {
+		execProjOpsAndPush(username, project, ProjectOperationConst.GIT_CHECKOUT);
+	}
 
 	@Override
 	public void deploy(Project project, String username) {
 		String name = project.getName();
-		String sourcePath = project.getProjectSourcePath();
+		String deployPath = project.getProjectDeployPath() + name;
 		
-		// TODO
+		File deployDir = new File(deployPath);
+		
+		try {
+			FileUtils.forceMkdir(deployDir);
+		} catch (IOException e) {
+			LOG.info("创建部署文件夹失败。deployPath: {}", deployPath);
+			throw new ServiceException(ReturnCode.PROJECT_DEPLOY_PATH_MAKE_ERROR);
+		}
+		
+		execProjOpsAndPush(username, project, ProjectOperationConst.DEPLOY);
+	}
+	
+	@Override
+	public void startup(Project project, String username) {
+		execProjOpsAndPush(username, project, ProjectOperationConst.STARTUP);
 	}
 
+	@Override
+	public void shutdown(Project project, String username) {
+		execProjOpsAndPush(username, project, ProjectOperationConst.SHUTDOWN);
+	}
+	
 	/**
 	 * 从远程仓库克隆代码
 	 * @param project
@@ -159,24 +196,23 @@ public class LinuxProjectCommandServiceImpl implements ProjectCommandService {
 	 */
 	private void gitClone(Project project, String username, boolean force) {
 		String name = project.getName();
-		String sourcePath = project.getProjectSourcePath();
-		String projectPath = sourcePath + name;
+		String sourcePath = project.getProjectSourcePath() + name;
 		
-		File projectDir = new File(projectPath);
+		File sourceDir = new File(sourcePath);
 		
 		try {
-			FileUtils.forceMkdir(projectDir);
+			FileUtils.forceMkdir(sourceDir);
 		} catch (IOException e) {
-			LOG.info("创建源码路径失败。projectPath: {}", projectPath);
-			throw new ServiceException(ReturnCode.EXECUTE_COMMAND_ERROR);
+			LOG.info("创建源码目录失败。projectPath: {}", sourcePath);
+			throw new ServiceException(ReturnCode.PROJECT_SOURCE_PATH_MAKE_ERROR);
 		}
 		
 		if (force) {
 			try {
-				LOG.info("清空源码目录中的文件。projectDir: {}", projectDir.getAbsolutePath());
-				FileUtils.cleanDirectory(projectDir);
+				LOG.info("清空源码目录中的文件。projectDir: {}", sourceDir.getAbsolutePath());
+				FileUtils.cleanDirectory(sourceDir);
 			} catch (IOException e) {
-				LOG.info("清空目录报错。dir: {}", projectDir.getPath());
+				LOG.info("清空目录报错。dir: {}", sourceDir.getPath());
 			}
 		}
 		
@@ -289,6 +325,11 @@ public class LinuxProjectCommandServiceImpl implements ProjectCommandService {
 		}
 		return set;
 	}
+	/**
+	 * 
+	 * @param processStr 例子：dev      22690     1  0 15:49 ?        00:00:43 java -jar a2d44bbf_8c80_4dcf_8a1c_7441753f9f67-quickpay-app-start-1.0.0-SNAPSHOT.jar --spring.config.location=application.yml
+	 * @return
+	 */
 	private String getProjectIdByProcessStr(String processStr) {
 		Pattern pattern = Pattern.compile("\\s([a-z0-9_]+)-\\S+(\\.jar|\\.war)\\s");
 		Matcher matcher = pattern.matcher(processStr);

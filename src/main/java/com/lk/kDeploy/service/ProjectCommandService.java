@@ -38,6 +38,13 @@ public interface ProjectCommandService {
 	 * @param username
 	 */
 	void gitpull(Project project, String username);
+	
+	/**
+	 * 项目切换分支
+	 * @param project
+	 * @param username
+	 */
+	void checkout(Project project, String username);
 
 	/**
 	 * 打包部署项目
@@ -45,5 +52,19 @@ public interface ProjectCommandService {
 	 * @param username
 	 */
 	void deploy(Project project, String username);
+
+	/**
+	 * 启动项目
+	 * @param project
+	 * @param username
+	 */
+	void startup(Project project, String username);
+
+	/**
+	 * 停止项目
+	 * @param project
+	 * @param username
+	 */
+	void shutdown(Project project, String username);
 
 }

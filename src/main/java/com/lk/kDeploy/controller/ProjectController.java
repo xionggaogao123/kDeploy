@@ -151,6 +151,28 @@ public class ProjectController {
 	}
 	
 	/**
+	 * 项目切换分支
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/{id}/checkout")
+	@ValidateRequired({"branch"})
+	public ResponseDTO checkout(@RequestBody RequestDTO reqDto, @PathVariable("id") String id, HttpServletRequest request) {
+		Project project = getExistingProject(id);
+		
+		String username = (String) request.getSession().getAttribute(Constants.SESSION_LOGIN_USER);
+		
+		String branch = reqDto.getStringParam("branch");
+		project.setBranch(branch);
+		projectService.update(project);
+		
+		projectCommandService.checkout(project, username);
+		projectCommandService.deploy(project, username);
+		return RespBuildUtil.success();
+	}
+	
+	/**
 	 * 部署项目
 	 * @param id
 	 * @param request
@@ -163,6 +185,38 @@ public class ProjectController {
 		String username = (String) request.getSession().getAttribute(Constants.SESSION_LOGIN_USER);
 		
 		projectCommandService.deploy(project, username);
+		return RespBuildUtil.success();
+	}
+	
+	/**
+	 * 部署项目
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/{id}/startup")
+	public ResponseDTO startup(@PathVariable("id") String id, HttpServletRequest request) {
+		Project project = getExistingProject(id);
+		
+		String username = (String) request.getSession().getAttribute(Constants.SESSION_LOGIN_USER);
+		
+		projectCommandService.startup(project, username);
+		return RespBuildUtil.success();
+	}
+	
+	/**
+	 * 部署项目
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/{id}/shutdown")
+	public ResponseDTO shutdown(@PathVariable("id") String id, HttpServletRequest request) {
+		Project project = getExistingProject(id);
+		
+		String username = (String) request.getSession().getAttribute(Constants.SESSION_LOGIN_USER);
+		
+		projectCommandService.shutdown(project, username);
 		return RespBuildUtil.success();
 	}
 	

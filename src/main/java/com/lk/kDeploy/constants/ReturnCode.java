@@ -54,5 +54,9 @@ public interface ReturnCode {
      * 项目创建shell文件失败
      */
     int PROJECT_CREATE_SHELL_ERROR = 303;
+    /**
+     * 项目部署目录创建失败
+     */
+    int PROJECT_DEPLOY_PATH_MAKE_ERROR = 304;
     
 }

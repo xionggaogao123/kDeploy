@@ -202,6 +202,13 @@ Response:
 ${操作结果}
 ~~~
 
+#### 初始化项目 `/project/{id}/initialize`
+{id}为项目id
+~~~js
+Response:
+${操作结果}
+~~~
+
 #### 项目拉取最新代码 `/project/{id}/gitpull`
 {id}为项目id
 ~~~js

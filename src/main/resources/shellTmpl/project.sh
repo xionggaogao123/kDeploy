@@ -1,8 +1,8 @@
 #!/bin/bash
 
-usage="使用方式：sh xxx.sh [option]\noption:\n\tgit-clone: 从git仓库克隆代码\n\tgit-pull: 从git仓库拉取代码\n\tgit-checkout: 切换分支，可带分支名称\n\tgit-branch: 获取分支信息\n\tgit-deploy: 部署项目\n\tgit-start: 启动项目\n\tgit-stop: 停止项目\n"
+usage="使用方式：sh xxx.sh [option]\noption:\n\tgit-clone: 从git仓库克隆代码\n\tgit-pull: 从git仓库拉取代码\n\tgit-checkout: 切换分支，可带分支名称\n\tgit-branch: 获取分支信息\n\tdeploy: 部署项目\n\tstartup: 启动项目\n\tshutdown: 停止项目\n"
 
-options=("git-clone"  "git-pull"  "git-checkout"  "git-branch"  "git-deploy"  "git-start"  "git-stop")
+options=("git-clone"  "git-pull"  "git-checkout"  "git-branch"  "deploy"  "startup"  "shutdown")
 
 # 项目参数
 id="{{id}}"
@@ -16,6 +16,8 @@ deploySubModule="{{deploySubModule}}"
 
 projectSourceDir=${projectSourcePath}${name}
 projectDeployDir=${projectDeployPath}${name}
+deployPackageName=${id}-${packageName}
+deployPackage=${projectDeployPath}${deployPackageName}
 
 ## 定义基本方法
 # 返回对象在数组中的下标，没有匹配值返回255。indexOf "test" "${arrs[*]}"
@@ -84,13 +86,42 @@ elif [[ "$option" = "git-branch" ]]; then
   cd ${projectSourceDir}
   git branch
 
-elif [[ "$option" = "git-deploy" ]]; then
+elif [[ "$option" = "deploy" ]]; then
   echo -e "部署项目 ${name} ...\n"
 
-elif [[ "$option" = "git-start" ]]; then
+  checkSourcePathExists
+
+  cd ${projectSourceDir}
+  echo -e "使用mvn打包 ${name} ...\n"
+  mvn clean install -U -Dmaven.test.skip=true
+
+  echo -e "拷贝到目标目录 ${name} ...\n"
+  if [[ ! -n "$deploySubModule" ]]; then
+    cp target/${packageName} ${deployPackage}
+  else
+    cp ${deploySubModule}/target/${packageName}  ${deployPackage}
+  fi
+
+elif [[ "$option" = "startup" ]]; then
   echo -e "启动项目 ${name} ...\n"
 
-elif [[ "$option" = "git-stop" ]]; then
+  pid=$2
+  if [[ -n "$pid" ]]; then
+    echo -e "存在pid 杀掉进程 ...\n"
+    kill -s 9 $pid
+  fi
+
+  cd $projectDeployDir
+  nohup java -jar $deployPackageName > nohup.out
+
+elif [[ "$option" = "shutdown" ]]; then
   echo -e "停止项目 ${name} ...\n"
 
+  pid=$2
+  if [[ -n "$pid" ]]; then
+    echo -e "存在pid 杀掉进程 ...\n"
+    kill -s 9 $pid
+  fi
 fi
+
+echo -e "\n搞定\n"
