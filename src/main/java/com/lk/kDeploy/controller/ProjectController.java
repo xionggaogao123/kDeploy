@@ -73,7 +73,7 @@ public class ProjectController {
 		project.setStatus(projectCommandService.getStatus(project.getId()));
 		return RespBuildUtil.success(project);
 	}
-
+	
 	@PostMapping("/add")
 	@ValidateRequired({"name", "gitUrl", "projectSourcePath", "projectDeployPath", "packageName", "deployWay"})
 	public ResponseDTO add(@RequestBody RequestDTO reqDto) {
@@ -87,7 +87,7 @@ public class ProjectController {
 		projectCommandService.initialize(project);
 		return RespBuildUtil.success();
 	}
-	
+
 	@PostMapping("/{id}/update")
 	public ResponseDTO update(@RequestBody RequestDTO reqDto, @PathVariable("id") String id) {
 		Project project = getExistingProject(id);
@@ -118,6 +118,19 @@ public class ProjectController {
 		Project project = projectService.getById(id);
 		projectService.delete(id);
 		projectCommandService.uninitialize(project);
+		return RespBuildUtil.success();
+	}
+	
+	/**
+	 * 初始化项目
+	 * @param id
+	 * @return
+	 */
+	@PostMapping("/{id}/initialize")
+	public ResponseDTO initialize(@PathVariable("id") String id) {
+		Project project = getExistingProject(id);
+		
+		projectCommandService.initialize(project);
 		return RespBuildUtil.success();
 	}
 	
