@@ -51,11 +51,11 @@ public class LinuxProjectCommandServiceImpl implements ProjectCommandService {
 			shellStr.replace("{{id}}", project.getId());
 			shellStr.replace("{{name}}", project.getName());
 			shellStr.replace("{{gitUrl}}", project.getGitUrl());
-			shellStr.replace("{{branch}}", project.getBranch());
+			shellStr.replace("{{branch}}", null == project.getBranch() ? "" : project.getBranch());
 			shellStr.replace("{{projectSourcePath}}", project.getProjectSourcePath());
 			shellStr.replace("{{projectDeployPath}}", project.getProjectDeployPath());
 			shellStr.replace("{{packageName}}", project.getPackageName());
-			shellStr.replace("{{deploySubModule}}", project.getDeploySubModule());
+			shellStr.replace("{{deploySubModule}}", null == project.getDeploySubModule() ? "" : project.getDeploySubModule());
 			
 			File shell = getShellFile(project.getName());
 			if (shell.exists()) {
