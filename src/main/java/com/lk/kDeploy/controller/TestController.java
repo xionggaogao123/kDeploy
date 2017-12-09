@@ -60,9 +60,20 @@ public class TestController {
 	public ResponseDTO resource(@RequestBody RequestDTO req) throws Exception {
 		InputStream stream = getClass().getClassLoader().getResourceAsStream(Constants.SHELL_TMPL_PROJECT_FILE);
 		String shellStr = IOUtils.toString(stream, "utf-8");
+		String source = shellStr;
+		
+		shellStr = shellStr.replace("{{id}}", "a2d44bbf_8c80_4dcf_8a1c_7441753f9f67");
+		shellStr = shellStr.replace("{{name}}", "springStart");
+		shellStr = shellStr.replace("{{gitUrl}}", "git@120.77.209.205:repositories/springStart.git");
+		shellStr = shellStr.replace("{{branch}}", "");
+		shellStr = shellStr.replace("{{projectSourcePath}}", "/home/dev/kdeployDir/");
+		shellStr = shellStr.replace("{{projectDeployPath}}", "/home/dev/kdeployApplDir/");
+		shellStr = shellStr.replace("{{packageName}}", "sprintStart-0.0.1-SNAPSHOT.jar");
+		shellStr = shellStr.replace("{{deploySubModule}}", "");
 		
 		Map<String, Object> map = new HashMap<>();
-		map.put("string", shellStr);
+		map.put("shellStr", shellStr);
+		map.put("shellStr2", source);
 		return RespBuildUtil.success(map);
 	}
 }

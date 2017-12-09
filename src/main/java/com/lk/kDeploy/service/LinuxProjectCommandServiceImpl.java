@@ -48,14 +48,14 @@ public class LinuxProjectCommandServiceImpl implements ProjectCommandService {
 			InputStream stream = getClass().getClassLoader().getResourceAsStream(Constants.SHELL_TMPL_PROJECT_FILE);
 			String shellStr = IOUtils.toString(stream, "utf-8");
 			
-			shellStr.replace("{{id}}", project.getId());
-			shellStr.replace("{{name}}", project.getName());
-			shellStr.replace("{{gitUrl}}", project.getGitUrl());
-			shellStr.replace("{{branch}}", null == project.getBranch() ? "" : project.getBranch());
-			shellStr.replace("{{projectSourcePath}}", project.getProjectSourcePath());
-			shellStr.replace("{{projectDeployPath}}", project.getProjectDeployPath());
-			shellStr.replace("{{packageName}}", project.getPackageName());
-			shellStr.replace("{{deploySubModule}}", null == project.getDeploySubModule() ? "" : project.getDeploySubModule());
+			shellStr = shellStr.replace("{{id}}", project.getId());
+			shellStr = shellStr.replace("{{name}}", project.getName());
+			shellStr = shellStr.replace("{{gitUrl}}", project.getGitUrl());
+			shellStr = shellStr.replace("{{branch}}", null == project.getBranch() ? "" : project.getBranch());
+			shellStr = shellStr.replace("{{projectSourcePath}}", project.getProjectSourcePath());
+			shellStr = shellStr.replace("{{projectDeployPath}}", project.getProjectDeployPath());
+			shellStr = shellStr.replace("{{packageName}}", project.getPackageName());
+			shellStr = shellStr.replace("{{deploySubModule}}", null == project.getDeploySubModule() ? "" : project.getDeploySubModule());
 			
 			File shell = getShellFile(project.getName());
 			if (shell.exists()) {
