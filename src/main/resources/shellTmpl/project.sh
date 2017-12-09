@@ -49,7 +49,7 @@ if [[ $? = 255 ]];then
 fi
 
 if [[ "$option" = "git-clone" ]]; then
-  echo "克隆项目 ${name} ...\n"
+  echo -e "克隆项目 ${name} ...\n"
 
   checkSourcePathExists
 
