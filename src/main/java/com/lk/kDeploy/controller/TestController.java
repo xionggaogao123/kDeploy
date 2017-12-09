@@ -1,9 +1,11 @@
 package com.lk.kDeploy.controller;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,11 +58,11 @@ public class TestController {
 	@AnonymousAccess
 	@PostMapping("/resource")
 	public ResponseDTO resource(@RequestBody RequestDTO req) throws Exception {
-		File shellTmpl = ResourceUtils.getFile("classpath:" + Constants.SHELL_TMPL_PROJECT_FILE);
+		InputStream stream = getClass().getClassLoader().getResourceAsStream(Constants.SHELL_TMPL_PROJECT_FILE);
+		String shellStr = IOUtils.toString(stream, "utf-8");
 		
 		Map<String, Object> map = new HashMap<>();
-		map.put("exists", shellTmpl.exists());
-		map.put("path", shellTmpl.getAbsolutePath());
+		map.put("string", shellStr);
 		return RespBuildUtil.success(map);
 	}
 }

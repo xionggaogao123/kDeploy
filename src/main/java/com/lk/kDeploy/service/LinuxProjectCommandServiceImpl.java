@@ -2,6 +2,7 @@ package com.lk.kDeploy.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -9,13 +10,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
 import com.lk.kDeploy.base.vo.ProjectListVO;
 import com.lk.kDeploy.constants.Constants;
@@ -38,14 +38,15 @@ public class LinuxProjectCommandServiceImpl implements ProjectCommandService {
 	@Autowired
 	private CommandService commandService;
 	
+	/**
+	 * https://segmentfault.com/a/1190000009275813
+	 */
 	@Override
 	public void initialize(Project project) {
 		LOG.info("初始化shell文件。projectName: {}", project.getName());
 		try {
-//			InputStream stream = getClass().getClassLoader().getResourceAsStream("static/xxx.pdf");
-			
-			File shellTmpl = ResourceUtils.getFile("classpath:" + Constants.SHELL_TMPL_PROJECT_FILE);
-			String shellStr = FileUtils.readFileToString(shellTmpl, "utf-8");
+			InputStream stream = getClass().getClassLoader().getResourceAsStream(Constants.SHELL_TMPL_PROJECT_FILE);
+			String shellStr = IOUtils.toString(stream, "utf-8");
 			
 			shellStr.replace("{{id}}", project.getId());
 			shellStr.replace("{{name}}", project.getName());
