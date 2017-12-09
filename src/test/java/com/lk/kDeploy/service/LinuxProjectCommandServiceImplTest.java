@@ -50,5 +50,22 @@ public class LinuxProjectCommandServiceImplTest {
 			System.out.println(id.length());
 		}
 	}
+	
+	@Test
+	public void getPid() {
+		String projectId = "a2d44bbf_8c80_4dcf_8a1c_7441753f9f67";
+		String echo = "dev      22690     1  0 15:49 ?        00:00:43 java -jar a2d44bbf_8c80_4dcf_8a1c_7441753f9f67-quickpay-app-start-1.0.0-SNAPSHOT.jar --spring.config.location=application.yml";
+		
+		String[] split = echo.split("\n");
+		for (String processStr : split) {
+			if (processStr.indexOf(projectId) > -1) {
+				Pattern pattern = Pattern.compile("^\\S+\\s+(\\S+)");
+				Matcher matcher = pattern.matcher(processStr);
+				if (matcher.find()) {
+					System.out.println(matcher.group(1));
+				}
+			}
+		}
+	}
 
 }

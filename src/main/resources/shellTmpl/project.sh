@@ -107,7 +107,7 @@ elif [[ "$option" = "startup" ]]; then
 
   pid=$2
   if [[ -n "$pid" ]]; then
-    echo -e "存在pid 杀掉进程 ...\n"
+    echo -e "存在pid:$pid ,杀掉进程 ...\n"
     kill -s 9 $pid
   fi
 
@@ -119,7 +119,7 @@ elif [[ "$option" = "shutdown" ]]; then
 
   pid=$2
   if [[ -n "$pid" ]]; then
-    echo -e "存在pid 杀掉进程 ...\n"
+    echo -e "存在pid:$pid ,杀掉进程 ...\n"
     kill -s 9 $pid
   fi
 fi

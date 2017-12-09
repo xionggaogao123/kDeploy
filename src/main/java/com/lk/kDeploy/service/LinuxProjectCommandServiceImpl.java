@@ -180,12 +180,14 @@ public class LinuxProjectCommandServiceImpl implements ProjectCommandService {
 	
 	@Override
 	public void startup(Project project, String username) {
-		execProjOpsAndPush(username, project, ProjectOperationConst.STARTUP);
+		String pid = getPid(project.getId());
+		execProjOpsAndPush(username, project, ProjectOperationConst.STARTUP, pid);
 	}
 
 	@Override
 	public void shutdown(Project project, String username) {
-		execProjOpsAndPush(username, project, ProjectOperationConst.SHUTDOWN);
+		String pid = getPid(project.getId());
+		execProjOpsAndPush(username, project, ProjectOperationConst.SHUTDOWN, pid);
 	}
 	
 	/**
@@ -226,8 +228,13 @@ public class LinuxProjectCommandServiceImpl implements ProjectCommandService {
 	}
 
 	private void execProjOpsAndPush(String username, Project project, String operation) {
+		execProjOpsAndPush(username, project, operation, null);
+	}
+	private void execProjOpsAndPush(String username, Project project, String operation, String operationParam) {
+		if (null == operationParam) operationParam = "";
+		
 		File shellFile = getShellFileStrong(project);
-		String command = String.format("sh %s %s", shellFile.getAbsolutePath(), operation);
+		String command = String.format("sh %s %s %s", shellFile.getAbsolutePath(), operation, operationParam);
 		commandService.executeAndPushLog(username, command);
 	}
 	private String execProjOps(Project project, String operation) {
@@ -335,6 +342,22 @@ public class LinuxProjectCommandServiceImpl implements ProjectCommandService {
 		Matcher matcher = pattern.matcher(processStr);
 		if (matcher.find()) {
 			return matcher.group(1);
+		}
+		return null;
+	}
+	
+	private String getPid(String projectId) {
+		String echo = commandService.execute("ps -ef | grep java");
+		
+		String[] split = echo.split("\n");
+		for (String processStr : split) {
+			if (processStr.indexOf(projectId) > -1) {
+				Pattern pattern = Pattern.compile("^\\S+\\s+(\\S+)");
+				Matcher matcher = pattern.matcher(processStr);
+				if (matcher.find()) {
+					return matcher.group(1);
+				}
+			}
 		}
 		return null;
 	}
