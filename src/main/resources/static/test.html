@@ -157,7 +157,7 @@
           param = null
         }
         $api(uri, "post", param, (res) => {
-          setMessageInnerHTML(JSON.stringify(res.data))
+          setMessageInnerHTML(res.returnCode + JSON.stringify(res.data | res.dataList) + '\n')
         })
       }
     </script>
