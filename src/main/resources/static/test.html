@@ -7,7 +7,7 @@
     <style media="screen">
       #console {
         font-family: "Source Code Pro",Consolas,Menlo,Monaco,"Courier New",monospace;
-        height: 600px;
+        height: 240px;
         overflow: auto;
         color: #aaa;
         background-color: #333;
@@ -16,18 +16,40 @@
   </head>
   <body>
     <h2>kDeploy test</h2>
-    <button type="button" name="button" onclick="login()">登录</button>
-    <button type="button" name="button" onclick="logout()">登出</button>
+    <button type="button" onclick="login()">登录</button>
+    <button type="button" onclick="logout()">登出</button>
     <span>|</span>
     <input type="text" style="width: 460px;" name="command" value="">
-    <button type="button" name="button" onclick="execute()">执行命令（推送）</button>
-    <button type="button" name="button" onclick="execute2()">执行命令（接口返回）</button>
+    <button type="button" onclick="execute()">执行命令（推送）</button>
+    <button type="button" onclick="execute2()">执行命令（接口返回）</button>
     <hr>
     <div id="console">
       <p id="message"></p>
     </div>
     <hr>
-    <button type="button" name="button" onclick="clean()">清除日志</button>
+    <button type="button" onclick="clean()">清除日志</button>
+
+    <hr>
+
+    <span>id:</span>
+    <input type="text" name="id" value="">
+    <br><br>
+    <textarea name="param" rows="3" cols="80">{"page":1, "pageSize": 3, "params":{}}</textarea>
+    <br><br>
+    <button type="button" onclick="http('api/project/pageList')">pageList</button>
+    <button type="button" onclick="http('api/project/{id}/get')">get</button>
+    <button type="button" onclick="http('api/project/add')">add</button>
+    <button type="button" onclick="http('api/project/{id}/update')">update</button>
+    <button type="button" onclick="http('api/project/{id}/update')">update</button>
+    <button type="button" onclick="http('api/project/{id}/delete')">delete</button>
+    <button type="button" onclick="http('api/project/{id}/initialize')">initialize</button>
+    <button type="button" onclick="http('api/project/{id}/gitpull')">gitpull</button>
+    <button type="button" onclick="http('api/project/{id}/checkout')">checkout</button>
+    <button type="button" onclick="http('api/project/{id}/deploy')">deploy</button>
+    <button type="button" onclick="http('api/project/{id}/startup')">startup</button>
+    <button type="button" onclick="http('api/project/{id}/shutdown')">shutdown</button>
+
+    <hr>
 
     <script src="js/lib/socket.io.js"></script>
     <script src="js/lib/axios.min.js"></script>
@@ -114,6 +136,29 @@
             clean()
             break;
         }
+      }
+
+
+      // ****************************************
+      window.http = (uri) => {
+        if (uri.indexOf("{id}") > -1) {
+          let id = document.getElementsByName("id")[0].value
+          if (id.length == 0) {
+            console.log("填写id");
+            return
+          }
+          uri = uri.replace("{id}", id)
+        }
+
+        let param = document.getElementsByName("param")[0].value
+        try {
+          param = JSON.parse(param)
+        } catch (e) {
+          param = null
+        }
+        $api(uri, "post", param, (res) => {
+          setMessageInnerHTML(JSON.stringify(res.data))
+        })
       }
     </script>
   </body>
