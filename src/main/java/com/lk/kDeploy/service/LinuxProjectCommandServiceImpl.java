@@ -135,11 +135,13 @@ public class LinuxProjectCommandServiceImpl implements ProjectCommandService {
 		
 		File gitConfig = FileUtils.getFile(projectGitDir, "config");
 		String gitUrl = getGitUrl(gitConfig);
-		if (project.getGitUrl().equals(gitUrl)) {
+		if (!project.getGitUrl().equals(gitUrl)) {
 			LOG.info("项目源码被被别的git项目占用，暴力克隆源码。projectName: {}", name);
 			gitClone(project, username, true);
 			return;
 		}
+		
+		execProjOpsAndPush(username, project, ProjectOperationConst.GIT_PULL);
 		
 		String branch = project.getBranch();
 		if (StringUtils.isNotBlank(branch)) {
@@ -152,8 +154,6 @@ public class LinuxProjectCommandServiceImpl implements ProjectCommandService {
 				execProjOpsAndPush(username, project, ProjectOperationConst.GIT_CHECKOUT);
 			}
 		}
-		
-		execProjOpsAndPush(username, project, ProjectOperationConst.GIT_PULL);
 	}
 	
 	@Override

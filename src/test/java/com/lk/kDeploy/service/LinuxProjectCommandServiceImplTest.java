@@ -1,6 +1,7 @@
 package com.lk.kDeploy.service;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -8,6 +9,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
+import com.lk.kDeploy.exception.ServiceException;
 import com.lk.kDeploy.util.UUIDUtil;
 
 public class LinuxProjectCommandServiceImplTest {
@@ -81,6 +83,23 @@ public class LinuxProjectCommandServiceImplTest {
 		
 		File projectGitDir = FileUtils.getFile(projectDir, ".git");
 		System.out.println(projectGitDir.getAbsolutePath());
+	}
+	
+	@Test
+	public void getGitUrl() {
+		String configStr = null;
+		try {
+			configStr = FileUtils.readFileToString(new File("C:/Users/ThinkPad/Desktop/config"), "UTF-8");
+		} catch (IOException e) {
+			System.out.println("读取git项目配置文件报错");
+			throw new ServiceException();
+		}
+		
+		Pattern pattern = Pattern.compile("url = (\\S+)");
+		Matcher matcher = pattern.matcher(configStr);
+		if (matcher.find()) {
+			System.out.println(matcher.group(1));
+		}
 	}
 	
 }
