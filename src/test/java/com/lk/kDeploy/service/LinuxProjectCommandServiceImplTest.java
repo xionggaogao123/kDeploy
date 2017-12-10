@@ -1,8 +1,10 @@
 package com.lk.kDeploy.service;
 
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
@@ -68,4 +70,17 @@ public class LinuxProjectCommandServiceImplTest {
 		}
 	}
 
+	@Test
+	public void getGitDir() {
+		String pathname = "D:/java/workspace-sts-3.8.3.RELEASE/springStart";
+		File projectDir = new File(pathname);
+		if (!projectDir.exists()) {
+			System.out.println("项目源码不存在，克隆源码");
+			return;
+		}
+		
+		File projectGitDir = FileUtils.getFile(projectDir, ".git");
+		System.out.println(projectGitDir.getAbsolutePath());
+	}
+	
 }

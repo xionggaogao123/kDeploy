@@ -126,7 +126,7 @@ public class LinuxProjectCommandServiceImpl implements ProjectCommandService {
 			return;
 		}
 		
-		File projectGitDir = FileUtils.getFile(projectDir, ".get");
+		File projectGitDir = FileUtils.getFile(projectDir, ".git");
 		if (!projectGitDir.exists() || !projectGitDir.isDirectory()) {
 			LOG.info("项目源码地址没有git相关文件，暴力克隆源码。projectName: {}", name);
 			gitClone(project, username, true);
