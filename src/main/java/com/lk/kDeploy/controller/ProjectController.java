@@ -166,6 +166,7 @@ public class ProjectController {
 		String branch = reqDto.getStringParam("branch");
 		project.setBranch(branch);
 		projectService.update(project);
+		projectCommandService.initialize(project);
 		
 		projectCommandService.checkout(project, username);
 		projectCommandService.deploy(project, username);

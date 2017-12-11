@@ -17,7 +17,7 @@ deploySubModule="{{deploySubModule}}"
 projectSourceDir=${projectSourcePath}${name}
 projectDeployDir=${projectDeployPath}${name}
 deployPackageName=${id}-${packageName}
-deployPackage=${projectDeployPath}${deployPackageName}
+deployPackage=${projectDeployDir}${deployPackageName}
 
 ## 定义基本方法
 # 返回对象在数组中的下标，没有匹配值返回255。indexOf "test" "${arrs[*]}"
@@ -112,7 +112,7 @@ elif [[ "$option" = "startup" ]]; then
   fi
 
   cd $projectDeployDir
-  nohup java -jar $deployPackageName > nohup.out
+  nohup java -jar $deployPackageName > nohup.out 2>&1 &
 
 elif [[ "$option" = "shutdown" ]]; then
   echo -e "停止项目 ${name} ...\n"
