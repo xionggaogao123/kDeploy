@@ -17,7 +17,7 @@ deploySubModule="{{deploySubModule}}"
 projectSourceDir=${projectSourcePath}${name}
 projectDeployDir=${projectDeployPath}${name}
 deployPackageName=${id}-${packageName}
-deployPackage=${projectDeployDir}${deployPackageName}
+deployPackage=${projectDeployDir}/${deployPackageName}
 
 ## 定义基本方法
 # 返回对象在数组中的下标，没有匹配值返回255。indexOf "test" "${arrs[*]}"
@@ -95,7 +95,7 @@ elif [[ "$option" = "deploy" ]]; then
   echo -e "使用mvn打包 ${name} ...\n"
   mvn clean install -U -Dmaven.test.skip=true
 
-  echo -e "拷贝到目标目录 ${name} ...\n"
+  echo -e "拷贝 ${name} 到目标目录 ${deployPackage} ...\n"
   if [[ ! -n "$deploySubModule" ]]; then
     cp target/${packageName} ${deployPackage}
   else
